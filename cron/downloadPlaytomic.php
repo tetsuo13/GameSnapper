@@ -9,10 +9,7 @@
 
 require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.db.php';
-
-$tempDirectory = ROOT_DIR . '../tmp/';
-$swfDirectory = ROOT_DIR . 'games/';
-$imgDirectory = ROOT_DIR . 'img/games/';
+require_once './lib.download.php';
 
 $feedUrl = 'http://playtomic.com/games/feed/playtomic?format=xml&category=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19&language=1,2,3,4,5,6,7,8,9,10,11,12&audience=0,1,2&minrating=40';
 
@@ -25,30 +22,14 @@ if ($xml === FALSE) {
     exit;
 }
 
-try {
-    $db = new db(db::DEFAULT_DSN, db::WRITE_ACCESS);
-} catch (Exception $e) {
-    echo 'Could not connect to DB: ', $e->getMessage(), PHP_EOL;
-    exit;
-}
+$db = prepareDb();
 
 $dbResults = array();
 
 $db->beginTransaction();
 
-$sqlInsert = 'INSERT INTO game
-              (title, description, instructions, filepath,
-               active, width, height)
-              VALUES
-              (:title, :description, :instructions, :filepath,
-               0, :width, :height)';
-
-$sqlCheck = 'SELECT COUNT(id) AS num_games
-             FROM   game
-             WHERE  title = :title';
-
-$insertStatement = $db->prepare($sqlInsert);
-$checkStatement = $db->prepare($sqlCheck);
+$insertStatement = prepareInsertStatement($db);
+$checkStatement = prepareCheckStatement($db);
 
 foreach ($xml->game as $g) {
     echo PHP_EOL, 'Processing ', $g->title, PHP_EOL;
@@ -92,27 +73,6 @@ foreach ($xml->game as $g) {
 
 if (!in_array(FALSE, $dbResults)) {
     $db->commit();
-}
-
-/**
- * @param string       $game
- * @param PDOStatement $statement
- *
- * @return boolean
- */
-function gameExists($title, PDOStatement $statement) {
-    $statement->bindParam(':title', $title, PDO::PARAM_STR, 128);
-    $result = $statement->execute();
-
-    if (!$result) {
-        return TRUE;
-    }
-
-    if ($statement->fetchColumn() == 0) {
-        return FALSE;
-    }
-
-    return TRUE;
 }
 
 /**
