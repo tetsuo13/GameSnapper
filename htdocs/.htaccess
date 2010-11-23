@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteRule ^.git - [F,L]
+
+Options -Indexes
+
+DirectoryIndex index
+
+<FilesMatch "^(index)$">
+    ForceType application/x-httpd-php5s
+</FilesMatch>

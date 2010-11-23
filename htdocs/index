@@ -1,0 +1,21 @@
+<?php
+/**
+ * Main landing page.
+ *
+ * @copyright 2010 GameSnapper
+ * @since     2010-11-18
+ * @author    Andrei Nicholson
+ */
+
+require_once '../lib/globals.php';
+require_once LIB_DIR . 'lib.htmlTemplate.php';
+
+$template = new htmlTemplate(TEMPLATE_DIR . 'index.html');
+
+try {
+    echo $template->execute();
+} catch (Exception $e) {
+    echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+/** vim: set filetype=php: */

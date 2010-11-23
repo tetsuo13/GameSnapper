@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<title>GameSnapper</title>
+<style type="text/css">
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+    outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+    text-decoration: none;
+}
+del {
+    text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+html, body, #body-outer {
+}
+body {
+    background: #19252c url(../img/bg-gray.jpg);
+    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.std-width {
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.std-width, #header, #body, #headline {
+    width: 767px;
+    margin: 0 auto;
+}
+#header-outer {
+    min-height: 125px;
+    background: url(../img/bg-header.jpg) repeat-x;
+}
+#header {
+    min-height: 125px;
+    background: url(../img/bg-gray.jpg);
+}
+#headline-outer {
+    min-height: 210px;
+    background: #4d1308 url(../img/headline-bg.png) no-repeat center top;
+}
+#headline {
+    min-height: 210px;
+}
+#nav {
+    height: 40px;
+}
+#nav li {
+    float: left;
+    display: inline;
+    list-style-type: none;
+}
+#nav li a {
+    color: #737373;
+    font-weight: bold;
+    float: left;
+    width: 68px;
+    height: 24px;
+    padding-top: 15px;
+    text-transform: uppercase;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+}
+#nav li a.active {
+    color: #fff;
+    background-image: url(../img/nav-active.png);
+}
+#body-outer {
+}
+#body {
+    background: url(../img/bg-bluegray.jpg) center top;
+}
+#footer {
+    border-top: 1px solid #394f67;
+    clear: both;
+    height: 36px;
+    color: #9ec3ea;
+    background: url(../img/footer-bg.png) repeat-x;
+    padding-top: 8px;
+}
+
+#banner {
+    clear: both;
+    float: left;
+    width: 100%;
+    height: 83px;
+    text-indent: -99999px;
+}
+#logo a {
+    margin-top: 25px;
+    width: 363px;
+    height: 36px;
+    display: block;
+    background-image: url(../img/logo.png);
+}
+h3.section {
+    font-size: 20px;
+    color: #fff;
+    text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<div id="header-outer">
+    <div id="header">
+        <div class="std-width">
+            <ul id="nav">
+                <li><a tal:attributes="href HOST_URL" class="active">Home</a></li>
+                <li><a tal:attributes="href string:${HOST_URL}/games">Games</a></li>
+                <li><a tal:attributes="href string:${HOST_URL}/contact">Contact</a></li>
+            </ul>
+            <div id="banner">
+                <h1 id="logo"><a tal:attributes="href HOST_URL">GameSnapper</a></h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="headline-outer">
+    <div id="headline">
+        <div class="std-width">
+            <h3 class="section">Latest Games</h3>
+        </div>
+    </div>
+</div>
+
+<div id="body-outer">
+    <div id="body">
+        <div class="std-width">
+            <p>Body</p>
+        </div>
+    </div>
+</div>
+
+<div id="footer">
+    <div class="std-width">
+        <p>Copyright &copy; <tal:block tal:replace="php: date('Y')" /> GameSnapper</p>
+    </div>
+</div>
+
+</body>
+</html>
