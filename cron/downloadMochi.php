@@ -11,7 +11,7 @@ require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.db.php';
 require_once './lib.download.php';
 
-$feedUrl = 'http://www.mochimedia.com/feeds/games/8897d1212df5b3f6/all/all?limit=25';
+$feedUrl = 'http://www.mochimedia.com/feeds/games/8897d1212df5b3f6/all/all?limit=25&tag=-zh-cn';
 
 echo 'Fetching XML feed...', PHP_EOL, PHP_EOL;
 
@@ -46,7 +46,49 @@ foreach ($xml->entry as $g) {
         continue;
     }
 
-    echo $zipUrl, PHP_EOL;
+    $workFile = downloadPackage($zipUrl, $tempDirectory);
+
+    if ($workFile == '') {
+        echo "\tError downloading ZIP", PHP_EOL;
+        continue;
+    }
+
+    echo "\tDownloaded ", number_format(filesize($workFile)), ' bytes',
+         PHP_EOL;
+
+    $contents = unzipContents($workFile, $tempDirectory);
+
+    $slug = findSlug($contents);
+
+    // TODO: Use $g to find slug as well.
+    if ($slug === NULL) {
+        echo "\tCould not get slug", PHP_EOL;
+        continue;
+    }
+
+    if (!unlink($workFile)) {
+        echo "\tCould not remove $workFile", PHP_EOL;
+    }
+
+    $categories = getCategories($g->category);
+
+    if (!validPull($contents)) {
+        removePull($contents);
+        continue;
+    }
+
+    filterContents($contents, $slug);
+
+print_r($contents);
+continue;
+    $finalContents = moveContentsToFinalDestination($contents, $swfDirectory,
+                                                    $imgDirectory);
+
+    if (!count($finalContents)) {
+        removePull($contents);
+        continue;
+    }
+
 /*
     $flashFile = downloadFlashObject($g->link);
 
@@ -56,11 +98,74 @@ foreach ($xml->entry as $g) {
     }
 */
 //print_r($g);
-//exit;
+exit;
 }
 
 /**
- * @param SimpleXMLElement $link
+ * @param array $contents
+ *
+ * @return string
+ */
+function findSlug(array $contents) {
+    foreach ($contents as $file) {
+        if (pathinfo($file, PATHINFO_EXTENSION) == 'swf') {
+            return pathinfo($file, PATHINFO_FILENAME);
+        }
+    }
+
+    return NULL;
+}
+
+/**
+ * @param array  &$contents
+ * @param string $slug
+ */
+function filterContents(array &$contents, $slug) {
+    $numItems = count($contents);
+
+    for ($i = 0; $i < $numItems; $i++) {
+        $extension = pathinfo($contents[$i], PATHINFO_EXTENSION);
+        $filename = pathinfo($contents[$i], PATHINFO_FILENAME);
+
+        if ($filename == '_thumb_100x100') {
+            $target = dirname($contents[$i]) . "/$slug.$extension";
+
+            if (!rename($contents[$i], $target)) {
+                echo "\tCould not move ", $contents[$i], " to $target", PHP_EOL;
+            } else {
+                $contents[$i] = $target;
+            }
+
+            continue;
+        } else if ($extension == 'swf') {
+            continue;
+        }
+
+        if (!unlink($contents[$i])) {
+            echo "\tCould not remove ", $contents[$i], PHP_EOL;
+        }
+
+        unset($contents[$i]);
+    }
+}
+
+/**
+ * @param SimpleXMLElement $category
+ *
+ * @return array
+ */
+function getCategories(SimpleXMLElement $category) {
+    $categories = array();
+
+    foreach ($category as $c) {
+        $categories[] = (string) $c['term'];
+    }
+
+    return $categories;
+}
+
+/**
+ * @param SimpleXMLElement $summary
  *
  * @return string
  */
@@ -83,45 +188,4 @@ function getZipUrl(SimpleXMLElement $summary) {
     }
 
     return NULL;
-}
-
-
-
-
-/**
- * @param SimpleXMLElement $link
- *
- * @return string
- */
-function downloadFlashObject(SimpleXMLElement $link) {
-    $url = getUrlToFlashObject($link);
-
-    if ($url === NULL) {
-        return $url;
-    }
-
-    $filename = basename($url);
-}
-
-/**
- * @param SimpleXMLElement $link
- *
- * @return string
- */
-function getUrlToFlashObject(SimpleXMLElement $link) {
-    $objectUrl = '';
-
-    foreach ($g->link as $l) {
-        if (!isset($l['type']) || !isset($l['href']) ||
-                $l['type'] != 'application/x-shockwave-flash') {
-            continue;
-        }
-
-        $objectUrl = $l['href'];
-        break;
-    }
-
-    if ($objectUrl == '') {
-        return NULL;
-    }
 }
