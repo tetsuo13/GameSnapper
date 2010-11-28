@@ -45,6 +45,34 @@ function prepareDb() {
 }
 
 /**
+ * @param db $db
+ *
+ * @return PDOStatement
+ */
+function prepareCategoryInsertStatement(db $db) {
+    $sqlInsert = 'INSERT INTO category
+                  (title)
+                  VALUES
+                  (:title)';
+    return $db->prepare($sqlInsert);
+}
+
+/**
+ * @param db $db
+ *
+ * @return PDOStatement
+ */
+function prepareCategoryXrefInsertStatement(db $db) {
+    $sqlInsert = 'INSERT INTO category_game_xref
+                  (game_id, category_id)
+                  VALUES
+                  (:game_id, :category_id)';
+    return $db->prepare($sqlInsert);
+}
+
+/**
+ * @param db $db
+ *
  * @return PDOStatement
  */
 function prepareInsertStatement(db $db) {
@@ -54,18 +82,18 @@ function prepareInsertStatement(db $db) {
                   VALUES
                   (:title, :description, :instructions, :filepath,
                    0, :width, :height)';
-
     return $db->prepare($sqlInsert);
 }
 
 /**
+ * @param db $db
+ *
  * @return PDOStatement
  */
 function prepareCheckStatement(db $db) {
     $sqlCheck = 'SELECT COUNT(id) AS num_games
                  FROM   game
                  WHERE  title = :title';
-
     return $db->prepare($sqlCheck);
 }
 
@@ -259,4 +287,47 @@ function moveFile($source, $targetDirectory) {
 
     echo "\tMoved ", basename($source), ' to ', $targetDirectory, PHP_EOL;
     return TRUE;
+}
+
+/**
+ * @param db $db
+ *
+ * @return array
+ */
+function getExistingCategories(db $db) {
+    $categoryId = array();
+
+    $sql = 'SELECT   id, title
+            FROM     category
+            ORDER BY title';
+
+    foreach ($db->query($sql) as $row) {
+        $categoryId[$row['title']] = $row['id'];
+    }
+
+    return $categoryId;
+}
+
+/**
+ * @param db     $db
+ * @param string $title
+ *
+ * @return int
+ */
+function insertCategory(db $db, $title) {
+    static $statement = NULL;
+
+    if ($statement === NULL) {
+        $statement = prepareCategoryInsertStatement($db);
+    }
+
+    $statement->bindParam(':title', $title, PDO::PARAM_STR, 64);
+
+    $result = $statement->execute();
+
+    if (!$result) {
+        return FALSE;
+    }
+
+    return $db->lastInsertId('category_id_seq');
 }
