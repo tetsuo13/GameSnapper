@@ -19,4 +19,6 @@ define('LIB_DIR', ROOT_DIR . 'lib/');
 /** Absolute path to HTML templates. */
 define('TEMPLATE_DIR', ROOT_DIR . 'templates/');
 
-define('HOST_URL', 'http://' . $_SERVER['SERVER_NAME']);
+/** URL to web site. Default to something when running in CLI mode. */
+define('HOST_URL',
+       'http://' . (!isset($_SERVER['SERVER_NAME'])) ? 'www.gamesnapper.com' : $_SERVER['SERVER_NAME']);
