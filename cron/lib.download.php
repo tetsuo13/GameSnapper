@@ -139,10 +139,11 @@ function downloadPackage($url, $tempDirectory) {
 /**
  * @param string $filePath
  * @param string $tempDirectory
+ * @param string $thumbnail
  *
  * @return array
  */
-function unzipContents($filePath, $tempDirectory) {
+function unzipContents($filePath, $tempDirectory, $thumbnail) {
     $contents = array();
     $zip = zip_open($filePath);
 
@@ -151,17 +152,13 @@ function unzipContents($filePath, $tempDirectory) {
         return $contents;
     }
 
+    $flashFile = substr($thumbnail, 0, -3) . 'swf';
+
     while ($entry = zip_read($zip)) {
         $filename = basename(zip_entry_name($entry));
 
-        switch (pathinfo($filename, PATHINFO_EXTENSION)) {
-            case 'jpg':
-            case 'png':
-            case 'swf':
-                break;
-
-            default:
-                continue;
+        if ($filename != $thumbnail && $filename != $flashFile) {
+            continue;
         }
 
         $fileSize = zip_entry_filesize($entry);

@@ -54,7 +54,8 @@ foreach ($xml->game as $g) {
     echo "\tDownloaded ", number_format(filesize($workFile)), ' bytes',
          PHP_EOL;
 
-    $contents = unzipContents($workFile, $tempDirectory);
+    $contents = unzipContents($workFile, $tempDirectory,
+                              basename((string) $g->thumbnail_url));
 
     if (!unlink($workFile)) {
         echo "\tCould not remove $workFile", PHP_EOL;
