@@ -12,7 +12,13 @@ require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.db.php';
 require_once './lib.download.php';
 
-$feedUrl = 'http://playtomic.com/games/feed/playtomic?format=xml&category=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19&language=1,2,3,4,5,6,7,8,9,10,11,12&audience=0,1,2&minrating=50';
+$feedUrl = 'http://playtomic.com/games/feed/playtomic'
+         . '?format=xml'
+         . '&category=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19'
+         . '&language=1,2,3,4,5,6,7,8,9,10,11,12'
+         . '&audience=0,1,2'
+         . '&minrating=50'
+         . '&limit=50';
 
 echo 'Fetching XML feed...', PHP_EOL, PHP_EOL;
 
