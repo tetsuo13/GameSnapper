@@ -4,7 +4,7 @@
  *
  * @copyright 2010 GameSnapper
  * @since     2010-11-23
- * @author    Andrei Nicholso
+ * @author    Andrei Nicholson
  */
 
 $tempDirectory = ROOT_DIR . 'tmp/';
@@ -12,7 +12,7 @@ $swfDirectory = ROOT_DIR . 'htdocs/games/';
 $imgDirectory = ROOT_DIR . 'htdocs/img/games/';
 
 /**
- * @param string       $game
+ * @param string       $title
  * @param PDOStatement $statement
  *
  * @return boolean
@@ -125,6 +125,17 @@ function unzipContents($filePath, $tempDirectory) {
 
     while ($entry = zip_read($zip)) {
         $filename = basename(zip_entry_name($entry));
+
+        switch (pathinfo($filename, PATHINFO_EXTENSION)) {
+            case 'jpg':
+            case 'png':
+            case 'swf':
+                break;
+
+            default:
+                continue;
+        }
+
         $fileSize = zip_entry_filesize($entry);
 
         $f = fopen($tempDirectory . $filename, 'w');
