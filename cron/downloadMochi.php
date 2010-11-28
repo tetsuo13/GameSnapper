@@ -70,6 +70,7 @@ foreach ($xml->entry as $g) {
     // TODO: Use $g to find slug as well.
     if ($slug === NULL) {
         echo "\tCould not get slug", PHP_EOL;
+        unlink($workFile);
         continue;
     }
 
