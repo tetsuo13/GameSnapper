@@ -18,7 +18,7 @@ $feedUrl = 'http://playtomic.com/games/feed/playtomic'
          . '&language=1,2,3,4,5,6,7,8,9,10,11,12'
          . '&audience=0,1,2'
          . '&minrating=50'
-         . '&limit=50';
+         . '&limit=25';
 
 echo 'Fetching XML feed...', PHP_EOL, PHP_EOL;
 
@@ -39,8 +39,6 @@ $insertStatement = prepareInsertStatement($db);
 $checkStatement = prepareCheckStatement($db);
 $categoryStatement = prepareCategoryXrefInsertStatement($db);
 $categoryId = getExistingCategories($db);
-
-$count = 0;
 
 foreach ($xml->game as $g) {
     echo PHP_EOL, 'Processing ', $g->title, PHP_EOL;
@@ -94,11 +92,6 @@ foreach ($xml->game as $g) {
     if (!associateCategories($categories, $db, $categoryId,
                              $categoryStatement, end($gameId))) {
         continue;
-    }
-
-    $count++;
-    if ($count >= 1) {
-        break;
     }
 }
 
