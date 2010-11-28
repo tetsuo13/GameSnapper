@@ -140,10 +140,12 @@ function downloadPackage($url, $tempDirectory) {
  * @param string $filePath
  * @param string $tempDirectory
  * @param string $thumbnail
+ * @param string $flashFile
  *
  * @return array
  */
-function unzipContents($filePath, $tempDirectory, $thumbnail) {
+function unzipContents($filePath, $tempDirectory, $thumbnail,
+                       $flashFile = NULL) {
     $contents = array();
     $zip = zip_open($filePath);
 
@@ -152,7 +154,9 @@ function unzipContents($filePath, $tempDirectory, $thumbnail) {
         return $contents;
     }
 
-    $flashFile = substr($thumbnail, 0, -3) . 'swf';
+    if ($flashFile === NULL) {
+        $flashFile = substr($thumbnail, 0, -3) . 'swf';
+    }
 
     while ($entry = zip_read($zip)) {
         $filename = basename(zip_entry_name($entry));
@@ -327,4 +331,85 @@ function insertCategory(db $db, $title) {
     }
 
     return $db->lastInsertId('category_id_seq');
+}
+
+/**
+ * @param array        $categories Category names game is associated with.
+ * @param db           $db         Database handle.
+ * @param array        $categoryId Existing category ID table.
+ * @param PDOStatement $statement  category_game_xref insert statement.
+ * @param int          $gameId     ID of last game inserted.
+ *
+ * @return boolean
+ */
+function associateCategories(array $categories, db $db, array $categoryId,
+                             PDOStatement $statement, $gameId) {
+    foreach ($categories as $title) {
+        if (!isset($categoryId[$title])) {
+            $categoryId[$title] = insertCategory($db, $title);
+        }
+
+        $statement->bindParam(':game_id', $gameId, PDO::PARAM_INT);
+        $statement->bindParam(':category_id', $categoryId[$title], PDO::PARAM_INT);
+        $result = $statement->execute();
+
+        if (!$result) {
+            echo "\tCould not associated game ID $gameId with category $title (",
+                 $categoryId[$title], ')', PHP_EOL;
+            print_r($statement->errorInfo());
+            $db->rollBack();
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+/**
+ * @param db           $db
+ * @param PDOStatement $statement
+ * @param array        $contents
+ * @param string       $swfDirectory
+ * @param string       $title
+ * @param string       $description
+ * @param string       $instructions
+ * @param int          $width
+ * @param int          $height
+ *
+ * @return int Game ID or FALSE if any error.
+ */
+function insertDb(db $db, PDOStatement $statement, array $contents,
+                  $swfDirectory, $title, $description, $instructions, $width,
+                  $height) {
+    $filePath = '';
+
+    foreach ($contents as $file) {
+        if (pathinfo($file, PATHINFO_EXTENSION) == 'swf') {
+            $filePath = substr($file, strlen($swfDirectory));
+            $filePath = substr($filePath, 0, -4);
+            break;
+        }
+    }
+
+    if ($filePath == '') {
+        echo "\tCould not determine file path", PHP_EOL;
+        return FALSE;
+    }
+
+    $statement->bindParam(':title', $title, PDO::PARAM_STR, 128);
+    $statement->bindParam(':description', $description, PDO::PARAM_STR, 1024);
+    $statement->bindParam(':instructions', $instructions, PDO::PARAM_STR, 1024);
+    $statement->bindParam(':filepath', $filePath, PDO::PARAM_STR, 128);
+    $statement->bindParam(':width', $width, PDO::PARAM_INT);
+    $statement->bindParam(':height', $height, PDO::PARAM_INT);
+
+    $result = $statement->execute();
+
+    if (!$result) {
+        echo "\tCould not insert game record", PHP_EOL;
+        print_r($statement->errorInfo());
+        $db->rollBack();
+        return FALSE;
+    }
+
+    return $db->lastInsertId('game_id_seq');
 }

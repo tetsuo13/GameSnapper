@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 /**
  * Download from Mochi.
@@ -11,7 +12,9 @@ require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.db.php';
 require_once './lib.download.php';
 
-$feedUrl = 'http://www.mochimedia.com/feeds/games/8897d1212df5b3f6/all/all?limit=25&tag=-zh-cn';
+$feedUrl = 'http://www.mochimedia.com/feeds/games/8897d1212df5b3f6/all/all'
+         . '?limit=25'
+         . '&tag=-zh-cn';
 
 echo 'Fetching XML feed...', PHP_EOL, PHP_EOL;
 
@@ -24,12 +27,14 @@ if ($xml === FALSE) {
 
 $db = prepareDb();
 
-$dbResults = array();
+$gameId = array();
 
 $db->beginTransaction();
 
 $insertStatement = prepareInsertStatement($db);
 $checkStatement = prepareCheckStatement($db);
+$categoryStatement = prepareCategoryXrefInsertStatement($db);
+$categoryId = getExistingCategories($db);
 
 foreach ($xml->entry as $g) {
     echo PHP_EOL, 'Processing ', $g->title, PHP_EOL;
@@ -56,7 +61,9 @@ foreach ($xml->entry as $g) {
     echo "\tDownloaded ", number_format(filesize($workFile)), ' bytes',
          PHP_EOL;
 
-    $contents = unzipContents($workFile, $tempDirectory);
+    $contents = unzipContents($workFile, $tempDirectory,
+                              basename($g->summary->div->a->img['src']),
+                              substr(basename($zipUrl), 0, -3) . 'swf');
 
     $slug = findSlug($contents);
 
@@ -79,8 +86,6 @@ foreach ($xml->entry as $g) {
 
     filterContents($contents, $slug);
 
-print_r($contents);
-continue;
     $finalContents = moveContentsToFinalDestination($contents, $swfDirectory,
                                                     $imgDirectory);
 
@@ -89,16 +94,28 @@ continue;
         continue;
     }
 
-/*
-    $flashFile = downloadFlashObject($g->link);
+    $x = explode('x', getSummary($g->summary, 'Resolution'));
+    $width = $x[0];
+    $height = $x[1];
 
-    if ($flashFile === NULL) {
-        echo "\tCould not locate URL to Flash object", PHP_EOL;
+    $gameId[] = insertDb($db, $insertStatement, $finalContents, $swfDirectory,
+                         $g->title,
+                         getSummary($g->summary, 'Description'),
+                         getSummary($g->summary, 'Instructions'),
+                         $width, $height);
+
+    if (end($gameId) == FALSE) {
         continue;
     }
-*/
-//print_r($g);
-exit;
+
+    if (!associateCategories($categories, $db, $categoryId,
+                             $categoryStatement, end($gameId))) {
+        continue;
+    }
+}
+
+if (!in_array(FALSE, $gameId)) {
+    $db->commit();
 }
 
 /**
@@ -180,6 +197,33 @@ function getZipUrl(SimpleXMLElement $summary) {
         if (strtolower($title) == 'zip file') {
             if (isset($summary->div->dl->dd[$i]) &&
                     $summary->div->dl->dd[$i]['class'] == 'zip_url' &&
+                    !empty($summary->div->dl->dd[$i][0])) {
+                return $summary->div->dl->dd[$i][0];
+            }
+        }
+        $i++;
+    }
+
+    return NULL;
+}
+
+/**
+ * @param SimpleXMLElement $summary
+ * @param string           $needle
+ *
+ * @return string
+ */
+function getSummary(SimpleXMLElement $summary, $needle) {
+    if (!isset($summary->div->dl->dt)) {
+        return NULL;
+    }
+
+    $needle = strtolower($needle);
+    $i = 0;
+
+    foreach ($summary->div->dl->dt as $k => $title) {
+        if (strtolower($title) == $needle) {
+            if (isset($summary->div->dl->dd[$i]) &&
                     !empty($summary->div->dl->dd[$i][0])) {
                 return $summary->div->dl->dd[$i][0];
             }

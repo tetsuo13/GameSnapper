@@ -80,8 +80,9 @@ foreach ($xml->game as $g) {
         continue;
     }
 
-    $gameId[] = insertDb($db, $insertStatement, $g, $finalContents,
-                            $swfDirectory);
+    $gameId[] = insertDb($db, $insertStatement, $finalContents, $swfDirectory,
+                         $g->title, $g->description, $g->instructions,
+                         $g->width, $g->height);
 
     if (end($gameId) == FALSE) {
         continue;
@@ -103,80 +104,4 @@ foreach ($xml->game as $g) {
 
 if (!in_array(FALSE, $gameId)) {
     $db->commit();
-}
-
-/**
- * @param array        $categories Category names game is associated with.
- * @param db           $db         Database handle.
- * @param array        $categoryId Existing category ID table.
- * @param PDOStatement $statement  category_game_xref insert statement.
- * @param int          $gameId     ID of last game inserted.
- *
- * @return boolean
- */
-function associateCategories(array $categories, db $db, array $categoryId,
-                             PDOStatement $statement, $gameId) {
-    foreach ($categories as $title) {
-        if (!isset($categoryId[$title])) {
-            $categoryId[$title] = insertCategory($db, $title);
-        }
-
-        $statement->bindParam(':game_id', $gameId, PDO::PARAM_INT);
-        $statement->bindParam(':category_id', $categoryId[$title], PDO::PARAM_INT);
-        $result = $statement->execute();
-
-        if (!$result) {
-            echo "\tCould not associated game ID $gameId with category $title (",
-                 $categoryId[$title], ')', PHP_EOL;
-            print_r($statement->errorInfo());
-            $db->rollBack();
-            return FALSE;
-        }
-    }
-    return TRUE;
-}
-
-/**
- * @param db               $db
- * @param PDOStatement     $statement
- * @param SimpleXMLElement $game
- * @param array            $contents
- * @param string           $swfDirectory
- *
- * @return int Game ID or FALSE if any error.
- */
-function insertDb(db $db, PDOStatement $statement, SimpleXMLElement $game,
-                  array $contents, $swfDirectory) {
-    $filePath = '';
-
-    foreach ($contents as $file) {
-        if (pathinfo($file, PATHINFO_EXTENSION) == 'swf') {
-            $filePath = substr($file, strlen($swfDirectory));
-            $filePath = substr($filePath, 0, -4);
-            break;
-        }
-    }
-
-    if ($filePath == '') {
-        echo "\tCould not determine file path", PHP_EOL;
-        return FALSE;
-    }
-
-    $statement->bindParam(':title', $game->title, PDO::PARAM_STR, 128);
-    $statement->bindParam(':description', $game->description, PDO::PARAM_STR, 1024);
-    $statement->bindParam(':instructions', $game->instructions, PDO::PARAM_STR, 1024);
-    $statement->bindParam(':filepath', $filePath, PDO::PARAM_STR, 128);
-    $statement->bindParam(':width', $game->width, PDO::PARAM_INT);
-    $statement->bindParam(':height', $game->height, PDO::PARAM_INT);
-
-    $result = $statement->execute();
-
-    if (!$result) {
-        echo "\tCould not insert game record", PHP_EOL;
-        print_r($statement->errorInfo());
-        $db->rollBack();
-        return FALSE;
-    }
-
-    return $db->lastInsertId('game_id_seq');
 }
