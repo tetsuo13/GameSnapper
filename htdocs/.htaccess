@@ -7,8 +7,11 @@ RewriteRule ^.git - [F,L]
 RewriteCond %{HTTP_HOST} ^gamesnapper\.com [NC]
 RewriteRule ^(.*)$ http://www.gamesnapper.com/$1 [R=301,NC,L]
 
+# URLs to games will follow pattern "play/<game.id>-<game.slug>".
+RewriteRule ^play/(\d+)\-(.*)$ /play?id=$1&title=$2
+
 DirectoryIndex index
 
-<FilesMatch "^(index)$">
+<FilesMatch "^(index|play)$">
     ForceType application/x-httpd-php5s
 </FilesMatch>

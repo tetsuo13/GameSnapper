@@ -1,0 +1,12 @@
+<?php
+/**
+ * Game play page.
+ *
+ * @copyright 2010 GameSnapper
+ * @since     2010-11-28
+ * @author    Andrei Nicholson
+ */
+
+require_once '../lib/globals.php';
+
+/** vim: set filetype=php: */
