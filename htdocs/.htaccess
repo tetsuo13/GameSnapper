@@ -1,11 +1,11 @@
+Options -Indexes +SymLinksIfOwnerMatch
+
 RewriteEngine On
 RewriteRule ^.git - [F,L]
 
 # Make sure we're using www subdomain.
-RewriteCond %{HTTP_HOST} !^www\.gamesnapper\.com [NC]
+RewriteCond %{HTTP_HOST} ^gamesnapper\.com [NC]
 RewriteRule ^(.*)$ http://www.gamesnapper.com/$1 [R=301,NC,L]
-
-Options -Indexes
 
 DirectoryIndex index
 
