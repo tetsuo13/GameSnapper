@@ -78,10 +78,10 @@ function prepareCategoryXrefInsertStatement(db $db) {
 function prepareInsertStatement(db $db) {
     $sqlInsert = 'INSERT INTO game
                   (title, description, instructions, filepath,
-                   active, width, height)
+                   active, width, height, slug)
                   VALUES
                   (:title, :description, :instructions, :filepath,
-                   0, :width, :height)';
+                   0, :width, :height, :slug)';
     return $db->prepare($sqlInsert);
 }
 
@@ -380,16 +380,23 @@ function insertDb(db $db, PDOStatement $statement, array $contents,
                   $swfDirectory, $title, $description, $instructions, $width,
                   $height) {
     $filePath = '';
+    $slug = '';
 
     foreach ($contents as $file) {
         if (pathinfo($file, PATHINFO_EXTENSION) == 'swf') {
+            // Keep only filepath + slug.
             $filePath = substr($file, strlen($swfDirectory));
-            $filePath = substr($filePath, 0, -4);
+
+            // Everything after filepath without extension.
+            $slug = substr($filePath, 6, -4);
+
+            // Everything up to first slash.
+            $filePath = substr($filePath, 0, 5);
             break;
         }
     }
 
-    if ($filePath == '') {
+    if ($filePath == '' || $slug == '') {
         echo "\tCould not determine file path", PHP_EOL;
         return FALSE;
     }
@@ -397,7 +404,8 @@ function insertDb(db $db, PDOStatement $statement, array $contents,
     $statement->bindParam(':title', $title, PDO::PARAM_STR, 128);
     $statement->bindParam(':description', $description, PDO::PARAM_STR, 1024);
     $statement->bindParam(':instructions', $instructions, PDO::PARAM_STR, 1024);
-    $statement->bindParam(':filepath', $filePath, PDO::PARAM_STR, 128);
+    $statement->bindParam(':filepath', $filePath, PDO::PARAM_STR, 16);
+    $statement->bindParam(':slug', $slug, PDO::PARAM_STR, 64);
     $statement->bindParam(':width', $width, PDO::PARAM_INT);
     $statement->bindParam(':height', $height, PDO::PARAM_INT);
 
