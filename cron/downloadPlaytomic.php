@@ -31,10 +31,6 @@ if ($xml === FALSE) {
 
 $db = prepareDb();
 
-$gameId = array();
-
-$db->beginTransaction();
-
 $insertStatement = prepareInsertStatement($db);
 $checkStatement = prepareCheckStatement($db);
 $categoryStatement = prepareCategoryXrefInsertStatement($db);
@@ -78,11 +74,15 @@ foreach ($xml->game as $g) {
         continue;
     }
 
-    $gameId[] = insertDb($db, $insertStatement, $finalContents, $swfDirectory,
-                         $g->title, $g->description, $g->instructions,
-                         $g->width, $g->height);
+    $db->beginTransaction();
 
-    if (end($gameId) == FALSE) {
+    $gameId = insertDb($db, $insertStatement, $finalContents, $swfDirectory,
+                       $g->title, $g->description, $g->instructions,
+                       $g->width, $g->height);
+
+    if ($gameId == FALSE) {
+        $db->rollBack();
+        removePull($finalContents);
         continue;
     }
 
@@ -90,11 +90,11 @@ foreach ($xml->game as $g) {
     $categories = explode('", "', substr((string) $g->categories, 1, -1));
 
     if (!associateCategories($categories, $db, $categoryId,
-                             $categoryStatement, end($gameId))) {
+                             $categoryStatement, $gameId)) {
+        $db->rollBack();
+        removePull($finalContents);
         continue;
     }
-}
 
-if (!in_array(FALSE, $gameId)) {
     $db->commit();
 }

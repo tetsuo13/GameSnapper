@@ -357,7 +357,6 @@ function associateCategories(array $categories, db $db, array $categoryId,
             echo "\tCould not associated game ID $gameId with category $title (",
                  $categoryId[$title], ')', PHP_EOL;
             print_r($statement->errorInfo());
-            $db->rollBack();
             return FALSE;
         }
     }
@@ -407,7 +406,6 @@ function insertDb(db $db, PDOStatement $statement, array $contents,
     if (!$result) {
         echo "\tCould not insert game record", PHP_EOL;
         print_r($statement->errorInfo());
-        $db->rollBack();
         return FALSE;
     }
 
