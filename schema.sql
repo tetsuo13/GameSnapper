@@ -7,12 +7,14 @@ played          INTEGER NOT NULL DEFAULT 0,
 description     VARCHAR(1024) NOT NULL,
 instructions    VARCHAR(1024),
 added           TIMESTAMP NOT NULL DEFAULT NOW(),
-filepath        VARCHAR(128) NOT NULL,
+filepath        VARCHAR(16) NOT NULL,
+slug            VARCHAR(64) NOT NULL,
 active          SMALLINT NOT NULL,
 width           SMALLINT NOT NULL,
 height          SMALLINT NOT NULL,
 
 UNIQUE (title),
+UNIQUE (slug),
 CONSTRAINT game_valid_active CHECK (active = 0 OR active = 1)
 );
 
