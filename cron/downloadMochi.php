@@ -13,8 +13,7 @@ require_once LIB_DIR . 'lib.db.php';
 require_once './lib.download.php';
 
 $feedUrl = 'http://www.mochimedia.com/feeds/games/8897d1212df5b3f6/all/all'
-         . '?limit=25'
-         . '&tag=-zh-cn';
+         . '?limit=25';
 
 echo 'Fetching XML feed...', PHP_EOL, PHP_EOL;
 
