@@ -1,6 +1,15 @@
 Options -Indexes +SymLinksIfOwnerMatch
 
+DirectoryIndex index
+
+<FilesMatch "^(index|notfound|play)$">
+    ForceType application/x-httpd-php5s
+</FilesMatch>
+
+ErrorDocument 404 /notfound
+
 RewriteEngine On
+
 RewriteRule ^.git - [F,L]
 
 # Make sure we're using www subdomain.
@@ -10,8 +19,3 @@ RewriteRule ^(.*)$ http://www.gamesnapper.com/$1 [R=301,NC,L]
 # URLs to games will follow pattern "play/<game.id>-<game.slug>".
 RewriteRule ^play/(\d+)\-(.*)$ /play?id=$1&title=$2
 
-DirectoryIndex index
-
-<FilesMatch "^(index|play)$">
-    ForceType application/x-httpd-php5s
-</FilesMatch>
