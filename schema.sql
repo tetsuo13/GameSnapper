@@ -37,8 +37,10 @@ GRANT SELECT, INSERT, UPDATE ON rating TO neoanime_gsrw;
 CREATE TABLE category (
 id              SERIAL PRIMARY KEY,
 title           VARCHAR(64) NOT NULL,
+homepage        SMALLINT NOT NULL,
 
-UNIQUE (title)
+UNIQUE (title),
+CONSTRAINT category_valid_homepage CHECK (homepage = 0 OR homepage = 1)
 );
 
 GRANT SELECT ON category TO neoanime_gsro;

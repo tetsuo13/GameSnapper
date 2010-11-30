@@ -51,9 +51,9 @@ function prepareDb() {
  */
 function prepareCategoryInsertStatement(db $db) {
     $sqlInsert = 'INSERT INTO category
-                  (title)
+                  (title, homepage)
                   VALUES
-                  (:title)';
+                  (:title, 0)';
     return $db->prepare($sqlInsert);
 }
 
