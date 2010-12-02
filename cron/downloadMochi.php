@@ -12,8 +12,8 @@ require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.db.php';
 require_once './lib.download.php';
 
-$feedUrl = 'http://www.mochimedia.com/feeds/games/8897d1212df5b3f6/all/all'
-         . '?limit=25';
+$feedUrl = 'http://www.mochimedia.com/feeds/games/8897d1212df5b3f6/featured_games/all'
+         . '?limit=10';
 
 echo 'Fetching XML feed...', PHP_EOL, PHP_EOL;
 
@@ -46,6 +46,13 @@ foreach ($xml->entry as $g) {
         continue;
     }
 
+    $slug = findSlug($g->summary);
+
+    if ($slug === NULL) {
+        echo "\tCould not get slug", PHP_EOL;
+        continue;
+    }
+
     $workFile = downloadPackage($zipUrl, $tempDirectory);
 
     if ($workFile == '') {
@@ -56,31 +63,29 @@ foreach ($xml->entry as $g) {
     echo "\tDownloaded ", number_format(filesize($workFile)), ' bytes',
          PHP_EOL;
 
-    $contents = unzipContents($workFile, $tempDirectory,
-                              basename($g->summary->div->a->img['src']),
-                              substr(basename($zipUrl), 0, -3) . 'swf');
+    $flashFile = getFlashFilename($g->link);
 
-    $slug = findSlug($contents);
-
-    // TODO: Use $g to find slug as well.
-    if ($slug === NULL) {
-        echo "\tCould not get slug", PHP_EOL;
-        unlink($workFile);
+    if ($flashFile === NULL) {
+        echo "\tCould not get Flash filename from links", PHP_EOL;
         continue;
     }
+
+    $contents = unzipContents($workFile, $tempDirectory,
+                              basename($g->summary->div->a->img['src']),
+                              $flashFile);
 
     if (!unlink($workFile)) {
         echo "\tCould not remove $workFile", PHP_EOL;
     }
 
-    $categories = getCategories($g->category);
+    filterContents($contents, $slug);
 
     if (!validPull($contents)) {
         removePull($contents);
         continue;
     }
 
-    filterContents($contents, $slug);
+    $categories = getCategories($g->category);
 
     $finalContents = moveContentsToFinalDestination($contents, $swfDirectory,
                                                     $imgDirectory);
@@ -119,18 +124,38 @@ foreach ($xml->entry as $g) {
 }
 
 /**
- * @param array $contents
+ * @param SimpleXMLElement $link
  *
  * @return string
  */
-function findSlug(array $contents) {
-    foreach ($contents as $file) {
-        if (pathinfo($file, PATHINFO_EXTENSION) == 'swf') {
-            return pathinfo($file, PATHINFO_FILENAME);
+function getFlashFilename(SimpleXMLElement $link) {
+    foreach ($link as $l) {
+        if ($l['type'] == 'application/x-shockwave-flash') {
+            return basename($l['href']);
         }
     }
-
     return NULL;
+}
+
+/**
+ * @param SimpleXMLElement $summary
+ *
+ * @return string
+ */
+function findSlug(SimpleXMLElement $summary) {
+    $slug = getSummary($summary, 'Slug');
+
+    if (empty($slug)) {
+        echo "\tEmpty slug in summary", PHP_EOL;
+        return NULL;
+    }
+
+    if (strpos($slug, '_v') !== FALSE) {
+        echo "\tSlug contains version ($slug)", PHP_EOL;
+        return NULL;
+    }
+
+    return $slug;
 }
 
 /**
@@ -155,6 +180,16 @@ function filterContents(array &$contents, $slug) {
 
             continue;
         } else if ($extension == 'swf') {
+            if ($filename != $slug . '.swf') {
+                $target = dirname($contents[$i]) . "/$slug.swf";
+
+                if (!rename($contents[$i], $target)) {
+                    echo "\tCould not move ", $contents[$i], " to $target",
+                         PHP_EOL;
+                } else {
+                    $contents[$i] = $target;
+                }
+            }
             continue;
         }
 
