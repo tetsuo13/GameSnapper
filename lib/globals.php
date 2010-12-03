@@ -26,4 +26,4 @@ define('INCLUDE_DIR', ROOT_DIR . 'includes/');
 
 /** URL to web site. Default to something when running in CLI mode. */
 define('HOST_URL',
-       'http://' . (!isset($_SERVER['SERVER_NAME'])) ? 'www.gamesnapper.com' : $_SERVER['SERVER_NAME']);
+       'http://' . (!isset($_SERVER['SERVER_NAME']) ? 'www.gamesnapper.com' : $_SERVER['SERVER_NAME']));
