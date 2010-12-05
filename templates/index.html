@@ -296,12 +296,7 @@ h3 {
         <div class="std-width">
             <div class="nav">
                 <ul class="front-cat">
-                    <li><a href="" class="active">Action</a></li>
-                    <li><a href="">Sports</a></li>
-                    <li><a href="">Puzzle</a></li>
-                    <li><a href="">Shooting</a></li>
-                    <li><a href="">Arcade</a></li>
-                    <li><a href="">Strategy</a></li>
+                    <li tal:repeat="item category"><a href="" tal:attributes="class php: repeat.item.start ? 'active' : NULL" tal:content="item/title"></a></li>
                 </ul>
             </div>
             <div class="main">

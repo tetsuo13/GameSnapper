@@ -10,6 +10,7 @@
 require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.htmlTemplate.php';
 require_once LIB_DIR . 'lib.db.php';
+require_once INCLUDE_DIR . 'inc.category.php';
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'index.html');
 
@@ -50,6 +51,11 @@ foreach ($db->query($sql) as $row) {
 }
 
 $template->set('game', $game);
+
+// Keep only categories which are meant to be shown on homepage.
+$template->set('category',
+               array_filter($category,
+                            create_function('$o', 'return ($o["homepage"] == 1);')));
 
 try {
     echo $template->execute();
