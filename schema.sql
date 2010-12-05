@@ -12,6 +12,7 @@ slug            VARCHAR(64) NOT NULL,
 active          SMALLINT NOT NULL,
 width           SMALLINT NOT NULL,
 height          SMALLINT NOT NULL,
+thumbtype       VARCHAR(8) NOT NULL,
 
 UNIQUE (title),
 UNIQUE (slug),

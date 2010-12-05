@@ -101,11 +101,11 @@ foreach ($xml->entry as $g) {
 
     $db->beginTransaction();
 
-    $gameId = insertDb($db, $insertStatement, $finalContents, $swfDirectory,
-                       $g->title,
-                       getSummary($g->summary, 'Description'),
-                       getSummary($g->summary, 'Instructions'),
-                       $width, $height);
+    $gameId = insertGame($db, $insertStatement, $finalContents, $swfDirectory,
+                         $g->title,
+                         getSummary($g->summary, 'Description'),
+                         getSummary($g->summary, 'Instructions'),
+                         $width, $height);
 
     if ($gameId == FALSE) {
         $db->rollBack();

@@ -78,10 +78,12 @@ function prepareCategoryXrefInsertStatement(db $db) {
 function prepareInsertStatement(db $db) {
     $sqlInsert = 'INSERT INTO game
                   (title, description, instructions, filepath,
-                   active, width, height, slug)
+                   active, width, height, slug,
+                   thumbtype)
                   VALUES
                   (:title, :description, :instructions, :filepath,
-                   0, :width, :height, :slug)';
+                   0, :width, :height, :slug,
+                   :thumbtype)';
     return $db->prepare($sqlInsert);
 }
 
@@ -376,14 +378,16 @@ function associateCategories(array $categories, db $db, array $categoryId,
  *
  * @return int Game ID or FALSE if any error.
  */
-function insertDb(db $db, PDOStatement $statement, array $contents,
-                  $swfDirectory, $title, $description, $instructions, $width,
-                  $height) {
+function insertGame(db $db, PDOStatement $statement, array $contents,
+                    $swfDirectory, $title, $description, $instructions,
+                    $width, $height) {
     $filePath = '';
     $slug = '';
+    $thumbType = '';
 
     foreach ($contents as $file) {
-        if (pathinfo($file, PATHINFO_EXTENSION) == 'swf') {
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        if ($extension == 'swf') {
             // Keep only filepath + slug.
             $filePath = substr($file, strlen($swfDirectory));
 
@@ -392,7 +396,8 @@ function insertDb(db $db, PDOStatement $statement, array $contents,
 
             // Everything up to first slash.
             $filePath = substr($filePath, 0, 5);
-            break;
+        } else {
+            $thumbType = $extension;
         }
     }
 
@@ -408,6 +413,7 @@ function insertDb(db $db, PDOStatement $statement, array $contents,
     $statement->bindParam(':slug', $slug, PDO::PARAM_STR, 64);
     $statement->bindParam(':width', $width, PDO::PARAM_INT);
     $statement->bindParam(':height', $height, PDO::PARAM_INT);
+    $statement->bindParam(':thumbtype', $thumbType, PDO::PARAM_STR, 8);
 
     $result = $statement->execute();
 

@@ -76,9 +76,9 @@ foreach ($xml->game as $g) {
 
     $db->beginTransaction();
 
-    $gameId = insertDb($db, $insertStatement, $finalContents, $swfDirectory,
-                       $g->title, $g->description, $g->instructions,
-                       $g->width, $g->height);
+    $gameId = insertGame($db, $insertStatement, $finalContents, $swfDirectory,
+                         $g->title, $g->description, $g->instructions,
+                         $g->width, $g->height);
 
     if ($gameId == FALSE) {
         $db->rollBack();
