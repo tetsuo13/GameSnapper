@@ -2,7 +2,7 @@ Options -Indexes +SymLinksIfOwnerMatch
 
 DirectoryIndex index
 
-<FilesMatch "^(index|notfound|play)$">
+<FilesMatch "^(categoryPage|index|notfound|play)$">
     ForceType application/x-httpd-php5s
 </FilesMatch>
 

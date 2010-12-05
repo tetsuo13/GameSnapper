@@ -195,9 +195,19 @@ h3 {
 #latest h2 {
     padding-bottom: 20px;
 }
+#latest .page {
+    font-size: 20px;
+    margin-bottom: -10px;
+    clear: both;
+    text-align: center;
+}
+#latest .page a, #latest .page a:active, #latest .page a:visited {
+    color: #FFDA66;
+    text-decoration: none;
+}
 #body .nav {
 }
-#body .main {
+#main {
     float: left;
     width: 477px;
 }
@@ -205,26 +215,26 @@ h3 {
     float: right;
     width: 290px;
 }
-.main {
+#main {
     padding-top: 20px;
 }
-.main .game {
+#main .game {
     display: inline;
     float: left;
 }
-.main .game-info {
+#main .game-info {
     padding-top: 10px;
     clear: both;
     display: block;
     width: 155px;
 }
-.main .game .game-info h3 a {
+#main .game .game-info h3 a {
     color: #fff;
 }
-.main .game .game-info p {
+#main .game .game-info p {
     padding-top: 10px;
 }
-.main .browse {
+#main .browse {
     padding-top: 20px;
     padding-bottom: 20px;
     font-weight: bold;
@@ -253,6 +263,20 @@ h3 {
     clear: both;
 }
 </style>
+<script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/jquery-1.4.4.min.js" />
+<script type="text/javascript">
+function dc(categoryId) {
+    if (isNaN(categoryId)) {
+        return;
+    }
+    $("#main").fadeOut(50);
+    $.get("/categoryPage", {id: categoryId}, function(data) {
+        $("#main").html(data).fadeIn(50);
+    });
+}
+(function($) {
+})(jQuery);
+</script>
 </head>
 <body>
 
@@ -270,6 +294,7 @@ h3 {
         </div>
     </div>
 </div>
+
 <div id="headline-outer">
     <div id="headline">
         <div class="std-width">
@@ -286,6 +311,7 @@ h3 {
                     field that will try to make you dizzy! Everything will be
                     much harder than a common arcade shooter game.</p>
                 </div>
+                <p class="page"><a href="">●</a> <a href="">○</a> <a href="">○</a></p>
             </div>
         </div>
     </div>
@@ -296,10 +322,10 @@ h3 {
         <div class="std-width">
             <div class="nav">
                 <ul class="front-cat">
-                    <li tal:repeat="item category"><a href="" tal:attributes="class php: repeat.item.start ? 'active' : NULL" tal:content="item/title"></a></li>
+                    <li tal:repeat="item category"><a href="" tal:attributes="onclick string:dc(${item/id});;return false; class php: repeat.item.start ? 'active' : NULL" tal:content="item/title"></a></li>
                 </ul>
             </div>
-            <div class="main">
+            <div id="main">
                 <div class="game" tal:repeat="item game">
                     <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
                             tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>

@@ -1,0 +1,58 @@
+<?php
+/**
+ * Ajax request for homepage games matching a category.
+ *
+ * @copyright 2010 GameSnapper
+ * @since     2010-12-05
+ * @author    Andrei Nicholson
+ */
+
+require_once '../lib/globals.php';
+require_once LIB_DIR . 'lib.htmlTemplate.php';
+require_once LIB_DIR . 'lib.db.php';
+require_once LIB_DIR . 'lib.gameDisplay.php';
+require_once INCLUDE_DIR . 'inc.category.php';
+
+$template = new htmlTemplate(TEMPLATE_DIR . 'categoryDisplay.html');
+$template->set('errorMessage', NULL);
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    $template->set('errorMessage', 'There was an error with your request.');
+} else {
+    try {
+        $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
+    } catch (Exception $e) {
+        $template->set('errorMessage',
+                       'There was an error processing your request. Please try again later.');
+    }
+
+    $game = array();
+
+    $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
+            FROM     game
+            JOIN     category_game_xref
+            ON       game_id = id
+            WHERE    category_id = :categoryId
+            ORDER BY played
+            LIMIT    9';
+
+    $statement = $db->prepare($sql);
+    $statement->bindParam(':categoryId', $_GET['id'], PDO::PARAM_INT);
+    $statement->execute();
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $row['description'] = trimText($row['description'], 20);
+        $game[] = $row;
+    }
+
+    $template->set('game', $game);
+    $template->set('category', $category[$_GET['id']]);
+}
+
+try {
+    echo $template->execute();
+} catch (Exception $e) {
+    echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+/** vim: set filetype=php: */
