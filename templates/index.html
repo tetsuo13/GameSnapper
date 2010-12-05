@@ -87,31 +87,46 @@ body {
 #nav {
     height: 40px;
 }
-#nav li {
+ul.front-cat {
+    padding-top: 10px;
+}
+#nav li, ul.front-cat li {
     float: left;
     display: inline;
     list-style-type: none;
 }
-#nav li a {
+#nav li a, ul.front-cat li a {
     color: #737373;
     font-weight: bold;
     float: left;
-    width: 68px;
-    height: 24px;
-    padding-top: 15px;
     text-transform: uppercase;
     text-align: center;
     display: block;
     text-decoration: none;
 }
-#nav li a.active {
+#nav li a {
+    width: 68px;
+    height: 24px;
+    padding-top: 15px;
+}
+ul.front-cat li a {
+    width: 69px;
+    height: 21px;
+    padding-top: 6px;
+}
+#nav li a.active, ul.front-cat li a.active {
     color: #fff;
+}
+#nav li a.active {
     background-image: url(../img/nav-active.png);
+}
+ul.front-cat li a.active {
+    background-image: url(../img/navcat-active.png);
 }
 #body-outer {
 }
 #body {
-    background: url(../img/bg-bluegray.jpg) center top;
+    background: url(../img/bg-bluegray.jpg);
 }
 #footer {
     border-top: 1px solid #394f67;
@@ -158,6 +173,32 @@ h2 {
 #latest, #latest a {
     color: #fff;
 }
+#latest {
+    padding: 25px;
+}
+#latest h1 {
+    padding-bottom: 20px;
+}
+#latest .game-info {
+    width: 90%;
+}
+#latest .thumb {
+    padding-right: 30px;
+    padding-left: 20px;
+}
+#latest h2 {
+    padding-bottom: 20px;
+}
+#body .nav {
+}
+#body .main {
+    float: left;
+    width: 477px;
+}
+#body .sidebar {
+    float: right;
+    width: 290px;
+}
 </style>
 </head>
 <body>
@@ -179,11 +220,10 @@ h2 {
 <div id="headline-outer">
     <div id="headline">
         <div class="std-width">
-            <h1 class="section">Latest Games</h1>
             <div id="latest">
-                <div class="thumb" tal:attributes="style string:background-image:url(${HOST_URL}/img/games/00061/enough-plumber.jpg)">
-                    <a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber"><img
-                        tal:attributes="alt string:Enough Plumbers" /></a>
+                <h1 class="section">Latest Games</h1>
+                <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber"><img
+                        tal:attributes="src string:${HOST_URL}/img/games/00061/enough-plumber.jpg; alt string:Enough Plumbers" /></a>
                 </div>
                 <div class="game-info">
                     <h2><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber">Enough Plumbers</a></h2>
@@ -201,7 +241,26 @@ h2 {
 <div id="body-outer">
     <div id="body">
         <div class="std-width">
-            <p>Body</p>
+            <div class="nav">
+                <ul class="front-cat">
+                    <li><a href="" class="active">Action</a></li>
+                    <li><a href="">Sports</a></li>
+                    <li><a href="">Puzzle</a></li>
+                    <li><a href="">Shooting</a></li>
+                    <li><a href="">Arcade</a></li>
+                    <li><a href="">Strategy</a></li>
+                </ul>
+            </div>
+            <div class="main">
+                <p>This is stuff</p>
+                <p>This is stuff</p>
+                <p>This is stuff</p>
+                <p>This is stuff</p>
+                <p>This is stuff</p>
+            </div>
+            <div class="sidebar">
+                <p>Ad</p>
+            </div>
         </div>
     </div>
 </div>
