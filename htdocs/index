@@ -28,6 +28,7 @@ $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
         LIMIT    3';
 
 foreach ($db->query($sql) as $row) {
+    $row['description'] = trimText($row['description'], 20);
     $highest[] = $row;
 }
 
@@ -44,6 +45,7 @@ $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
         LIMIT    9';
 
 foreach ($db->query($sql) as $row) {
+    $row['description'] = trimText($row['description'], 20);
     $game[] = $row;
 }
 
@@ -53,6 +55,15 @@ try {
     echo $template->execute();
 } catch (Exception $e) {
     echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+function trimText($text, $limit) {
+    $extra = '...';
+    preg_match_all('/(\S+\s+)/', strip_tags($text), $matches);
+    if ($limit < count($matches[0])) {
+        return rtrim(implode('', array_slice($matches[0], 0, $limit))) . $extra;
+    }
+    return $text;
 }
 
 /** vim: set filetype=php: */
