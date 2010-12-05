@@ -9,8 +9,45 @@
 
 require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.htmlTemplate.php';
+require_once LIB_DIR . 'lib.db.php';
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'index.html');
+
+try {
+    $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
+} catch (Exception $e) {
+    echo 'Could not connect to DB: ', $e->getMessage(), PHP_EOL;
+    exit;
+}
+
+$highest = array();
+
+$sql = 'SELECT   title, id, filepath, slug, description, thumbtype
+        FROM     game
+        ORDER BY played
+        LIMIT    3';
+
+foreach ($db->query($sql) as $row) {
+    $highest[] = $row;
+}
+
+$template->set('highest', $highest);
+
+$game = array();
+
+$sql = 'SELECT   title, id, filepath, slug, description, thumbtype
+        FROM     game
+        JOIN     category_game_xref
+        ON       game_id = id
+        WHERE    category_id = 4
+        ORDER BY played
+        LIMIT    9';
+
+foreach ($db->query($sql) as $row) {
+    $game[] = $row;
+}
+
+$template->set('game', $game);
 
 try {
     echo $template->execute();

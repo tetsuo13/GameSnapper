@@ -159,6 +159,9 @@ h1.section {
 h2 {
     font-size: 15px;
 }
+h3 {
+    font-size: 13px;
+}
 .thumb, .thumb img {
     width: 100px;
     height: 100px;
@@ -198,6 +201,26 @@ h2 {
 #body .sidebar {
     float: right;
     width: 290px;
+}
+#highest h1 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#highest h3 {
+    padding-bottom: 10px;
+}
+#highest h3 a {
+    color: #fff;
+}
+#highest .thumb {
+    padding-right: 20px;
+}
+#highest .game-info {
+    width: 90%;
+}
+#highest .game {
+    padding-bottom: 30px;
+    clear: both;
 }
 </style>
 </head>
@@ -252,14 +275,30 @@ h2 {
                 </ul>
             </div>
             <div class="main">
-                <p>This is stuff</p>
-                <p>This is stuff</p>
-                <p>This is stuff</p>
-                <p>This is stuff</p>
-                <p>This is stuff</p>
+                <div class="game" tal:repeat="item game">
+                    <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
+                            tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>
+                    </div>
+                    <div class="game-info">
+                        <h3><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}" tal:content="item/title"></a></h3>
+                        <p tal:content="item/description"></p>
+                    </div>
+                </div>
             </div>
             <div class="sidebar">
                 <p>Ad</p>
+                <div id="highest">
+                    <h1 class="section">Highest Rated</h1>
+                    <div class="game" tal:repeat="item highest">
+                        <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
+                                tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>
+                        </div>
+                        <div class="game-info">
+                            <h3><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}" tal:content="item/title"></a></h3>
+                            <p tal:content="item/description"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
