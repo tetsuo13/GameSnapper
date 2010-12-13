@@ -7,8 +7,15 @@
  * @author    Andrei Nicholson
  */
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+$serverName = (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : NULL);
+
+define('DEBUG_MODE',
+       ($serverName !== NULL ? (substr($serverName, 3) != 'www') : FALSE));
+
+if (DEBUG_MODE) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+}
 
 date_default_timezone_set('America/New_York');
 
@@ -26,4 +33,6 @@ define('INCLUDE_DIR', ROOT_DIR . 'includes/');
 
 /** URL to web site. Default to something when running in CLI mode. */
 define('HOST_URL',
-       'http://' . (!isset($_SERVER['SERVER_NAME']) ? 'www.gamesnapper.com' : $_SERVER['SERVER_NAME']));
+       'http://' . ($serverName === NULL ? 'www.gamesnapper.com' : $_SERVER['SERVER_NAME']));
+
+unset($serverName);

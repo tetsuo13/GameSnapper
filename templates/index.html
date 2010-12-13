@@ -263,7 +263,13 @@ h3 {
     clear: both;
 }
 </style>
-<script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/jquery.js" />
+<tal:block tal:condition="DEBUG_MODE">
+    <script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/jquery.js" />
+    <script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/swfobject.js" />
+</tal:block>
+<tal:block tal:condition="not: DEBUG_MODE">
+    <script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/gs.js" />
+</tal:block>
 <script type="text/javascript">
 function dc(categoryId) {
     if (isNaN(categoryId)) {
