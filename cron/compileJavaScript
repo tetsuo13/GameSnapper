@@ -17,6 +17,10 @@ JS_DIR = BASE_DIR + os.path.join("htdocs", "js") + os.sep
 TARGET_JS_FILE = JS_DIR + "gs.js"
 ALREADY_COMPILED_FILES = ["jquery.js", "swfobject.js"]
 
+def get_compiled_js_files(js_dir, file_list):
+    """Get contents of compiled JavaScript files."""
+    return "\n".join([open(os.path.join(js_dir, f)).read().strip() for f in file_list])
+
 def get_js_files_to_compile(js_dir, target_js_filename, skip_list):
     """Return a list of JavaScript filenames to be compiled."""
 
@@ -58,11 +62,10 @@ def write_compiled(js_code, target_file):
     f.close()
 
 if __name__ == "__main__":
+    compiled_js = get_compiled_js_files(JS_DIR, ALREADY_COMPILED_FILES)
     js_files = get_js_files_to_compile(JS_DIR, TARGET_JS_FILE, ALREADY_COMPILED_FILES)
 
-    if not js_files:
-        print "No JavaScript files to compile"
-        sys.exit(0)
+    if js_files:
+        compiled_js += "\n" + compile_js_files(JS_DIR, js_files, TARGET_JS_FILE)
 
-    compiled_js = compile_js_files(JS_DIR, js_files, TARGET_JS_FILE)
     write_compiled(compiled_js, TARGET_JS_FILE)
