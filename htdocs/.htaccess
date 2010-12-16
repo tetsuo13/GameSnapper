@@ -19,3 +19,12 @@ RewriteRule ^(.*)$ http://www.gamesnapper.com/$1 [R=301,NC,L]
 # URLs to games will follow pattern "play/<game.id>-<game.slug>".
 RewriteRule ^play/(\d+)\-(.*)$ /play?id=$1&title=$2
 
+# Gzip compression.
+<IfModule mod_deflate.c>
+    # html, xml, css, and js:
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript text/javascript application/javascript application/json
+    # webfonts and svg:
+    <FilesMatch "\.(ttf|otf|eot|svg)$">
+        SetOutputFilter DEFLATE
+    </FilesMatch>
+</IfModule>
