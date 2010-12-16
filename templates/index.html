@@ -1,9 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<meta charset="utf-8" />
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><![endif]-->
 <title>GameSnapper</title>
 <style type="text/css">
 html, body, div, span, applet, object, iframe,
@@ -264,11 +263,11 @@ h3 {
 }
 </style>
 <tal:block tal:condition="DEBUG_MODE">
-    <script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/jquery.js" />
-    <script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/swfobject.js" />
+    <script tal:attributes="src string:${HOST_URL}/js/jquery.js"></script>
+    <script tal:attributes="src string:${HOST_URL}/js/swfobject.js"></script>
 </tal:block>
 <tal:block tal:condition="not: DEBUG_MODE">
-    <script type="text/javascript" tal:attributes="src string:${HOST_URL}/js/gs.js" />
+    <script tal:attributes="src string:${HOST_URL}/js/gs.js"></script>
 </tal:block>
 <script type="text/javascript">
 function dc(categoryId) {
