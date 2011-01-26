@@ -3,7 +3,7 @@
 /**
  * Download from Playtomic.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-18
  * @author    Andrei Nicholson
  */
@@ -78,7 +78,7 @@ foreach ($xml->game as $g) {
 
     $gameId = insertGame($db, $insertStatement, $finalContents, $swfDirectory,
                          $g->title, $g->description, $g->instructions,
-                         $g->width, $g->height);
+                         $g->width, $g->height, $vendorIdPlaytomic);
 
     if ($gameId == FALSE) {
         $db->rollBack();

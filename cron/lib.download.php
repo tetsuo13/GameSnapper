@@ -2,10 +2,13 @@
 /**
  * Common functions for all download scripts.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-23
  * @author    Andrei Nicholson
  */
+
+$vendorIdMochi = 1;
+$vendorIdPlaytomic = 2;
 
 $tempDirectory = ROOT_DIR . 'tmp/';
 $swfDirectory = ROOT_DIR . 'htdocs/games/';
@@ -79,11 +82,11 @@ function prepareInsertStatement(db $db) {
     $sqlInsert = 'INSERT INTO game
                   (title, description, instructions, filepath,
                    active, width, height, slug,
-                   thumbtype)
+                   thumbtype, vendor_id)
                   VALUES
                   (:title, :description, :instructions, :filepath,
                    0, :width, :height, :slug,
-                   :thumbtype)';
+                   :thumbtype, :vendorid)';
     return $db->prepare($sqlInsert);
 }
 
@@ -375,12 +378,13 @@ function associateCategories(array $categories, db $db, array $categoryId,
  * @param string       $instructions
  * @param int          $width
  * @param int          $height
+ * @param int          $vendorId
  *
  * @return int Game ID or FALSE if any error.
  */
 function insertGame(db $db, PDOStatement $statement, array $contents,
                     $swfDirectory, $title, $description, $instructions,
-                    $width, $height) {
+                    $width, $height, $vendorId) {
     $filePath = '';
     $slug = '';
     $thumbType = '';
@@ -414,6 +418,7 @@ function insertGame(db $db, PDOStatement $statement, array $contents,
     $statement->bindParam(':width', $width, PDO::PARAM_INT);
     $statement->bindParam(':height', $height, PDO::PARAM_INT);
     $statement->bindParam(':thumbtype', $thumbType, PDO::PARAM_STR, 8);
+    $statement->bindParam(':vendorid', $vendorId, PDO::PARAM_INT);
 
     $result = $statement->execute();
 

@@ -3,7 +3,7 @@
 /**
  * Download from Mochi.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-23
  * @author    Andrei Nicholson
  */
@@ -105,7 +105,7 @@ foreach ($xml->entry as $g) {
                          $g->title,
                          getSummary($g->summary, 'Description'),
                          getSummary($g->summary, 'Instructions'),
-                         $width, $height);
+                         $width, $height, $vendorIdMochi);
 
     if ($gameId == FALSE) {
         $db->rollBack();
