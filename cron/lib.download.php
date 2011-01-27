@@ -412,9 +412,9 @@ function insertGame(db $db, PDOStatement $statement, array $contents,
         return FALSE;
     }
 
-    $statement->bindParam(':title', $title, PDO::PARAM_STR, 128);
-    $statement->bindParam(':description', $description, PDO::PARAM_STR, 1024);
-    $statement->bindParam(':instructions', $instructions, PDO::PARAM_STR, 1024);
+    $statement->bindParam(':title', trim($title), PDO::PARAM_STR, 128);
+    $statement->bindParam(':description', trim($description), PDO::PARAM_STR, 1024);
+    $statement->bindParam(':instructions', trim($instructions), PDO::PARAM_STR, 1024);
     $statement->bindParam(':filepath', $filePath, PDO::PARAM_STR, 16);
     $statement->bindParam(':slug', $slug, PDO::PARAM_STR, 64);
     $statement->bindParam(':width', $width, PDO::PARAM_INT);
