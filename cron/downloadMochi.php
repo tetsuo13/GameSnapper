@@ -39,6 +39,14 @@ foreach ($xml->entry as $g) {
         continue;
     }
 
+    $swfFileSize = getSummary($g->summary, 'SWF file size');
+
+    if ($swfFileSize === NULL || $swfFileSize > $maxSwfSize) {
+        echo "\tTitle reported larger than ", number_format($maxSwfSize),
+             ' MB: ', number_format($swfFileSize), PHP_EOL;
+        continue;
+    }
+
     $zipUrl = getZipUrl($g->summary);
 
     if ($zipUrl === NULL) {

@@ -44,6 +44,12 @@ foreach ($xml->game as $g) {
         continue;
     }
 
+    if ($g->swf_size > $maxSwfSize) {
+        echo "\tTitle reported larger than ", number_format($maxSwfSize),
+             ' MB: ', number_format($g->swf_size), PHP_EOL;
+        continue;
+    }
+
     $workFile = downloadPackage($g->zip_url, $tempDirectory);
 
     if ($workFile == '') {

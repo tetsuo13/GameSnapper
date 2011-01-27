@@ -7,6 +7,8 @@
  * @author    Andrei Nicholson
  */
 
+$maxSwfSize = 15000000;
+
 $vendorIdMochi = 1;
 $vendorIdPlaytomic = 2;
 
