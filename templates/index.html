@@ -1,331 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><![endif]-->
-<title>GameSnapper</title>
-<style type="text/css">
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    outline: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-    background: transparent;
-}
-body {
-    line-height: 1;
-}
-ol, ul {
-    list-style: none;
-}
-blockquote, q {
-    quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-    content: '';
-    content: none;
-}
+<tal:block metal:use-macro="commonLayout.html/main">
 
-/* remember to define focus styles! */
-:focus {
-    outline: 0;
-}
+    <tal:block metal:fill-slot="head_javascript">
+        <script type="text/javascript">/*<![CDATA[*/
+        function dc(categoryId) {
+            if (isNaN(categoryId)) {
+                return;
+            }
+            $("#main").fadeOut(50);
+            $.get("/categoryPage", {id: categoryId}, function(data) {
+                $("#main").html(data).fadeIn(50);
+            });
+        }
+        (function($) {
+        })(jQuery);
+        /*]]>*/</script>
+    </tal:block>
 
-/* remember to highlight inserts somehow! */
-ins {
-    text-decoration: none;
-}
-del {
-    text-decoration: line-through;
-}
-
-/* tables still need 'cellspacing="0"' in the markup */
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-html, body, #body-outer {
-}
-body {
-    color: #737373;
-    background: #19252c;
-    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-a {
-    color: #fff;
-}
-.std-width {
-    position: relative;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-.std-width, #header, #body, #headline {
-    width: 767px;
-    margin: 0 auto;
-}
-#header-outer {
-    min-height: 125px;
-    background: url(../img/header-bg.jpg) no-repeat center top;
-}
-#headline-outer {
-    min-height: 210px;
-    background: #4d1308 url(../img/headline-bg.png) no-repeat center top;
-}
-#headline {
-    min-height: 210px;
-}
-#nav {
-    height: 40px;
-}
-ul.front-cat {
-    padding-top: 10px;
-}
-#nav li, ul.front-cat li {
-    float: left;
-    display: inline;
-    list-style-type: none;
-}
-#nav li a, ul.front-cat li a {
-    color: #737373;
-    font-weight: bold;
-    float: left;
-    text-transform: uppercase;
-    text-align: center;
-    display: block;
-    text-decoration: none;
-}
-#nav li a {
-    width: 68px;
-    height: 24px;
-    padding-top: 15px;
-}
-ul.front-cat li a {
-    width: 69px;
-    height: 21px;
-    padding-top: 6px;
-}
-#nav li a.active, ul.front-cat li a.active {
-    color: #fff;
-}
-#nav li a.active {
-    background-image: url(../img/nav-active.png);
-}
-ul.front-cat li a.active {
-    background-image: url(../img/navcat-active.png);
-}
-#body-outer {
-}
-#body {
-    background-color: #213440;
-    height: 1000px;
-}
-#footer {
-    border-top: 1px solid #394f67;
-    clear: both;
-    height: 36px;
-    color: #9ec3ea;
-    background: url(../img/footer-bg.png) repeat-x;
-    padding-top: 8px;
-}
-
-#banner {
-    clear: both;
-    float: left;
-    width: 100%;
-    height: 83px;
-    text-indent: -99999px;
-}
-#logo a {
-    margin-top: 25px;
-    width: 363px;
-    height: 36px;
-    display: block;
-    background-image: url(../img/logo.png);
-}
-h1.section {
-    font-size: 20px;
-    color: #fff;
-    text-transform: uppercase;
-}
-h2 {
-    font-size: 15px;
-}
-h3 {
-    font-size: 13px;
-}
-.thumb, .thumb img {
-    width: 100px;
-    height: 100px;
-}
-.thumb {
-    float: left;
-    background-repeat: no-repeat;
-}
-.thumb img {
-    display: block;
-}
-#latest, #latest a {
-    color: #fff;
-}
-#latest {
-    padding: 25px;
-}
-#latest h1 {
-    padding-bottom: 20px;
-}
-#latest .game-info {
-    width: 90%;
-}
-#latest .thumb {
-    padding-right: 30px;
-    padding-left: 20px;
-}
-#latest h2 {
-    padding-bottom: 20px;
-}
-#latest .page {
-    font-size: 20px;
-    margin-bottom: -10px;
-    clear: both;
-    text-align: center;
-}
-#latest .page a, #latest .page a:active, #latest .page a:visited {
-    color: #FFDA66;
-    text-decoration: none;
-}
-#body .nav {
-}
-#main {
-    float: left;
-    width: 477px;
-}
-#body .sidebar {
-    float: right;
-    width: 290px;
-}
-#main {
-    padding-top: 20px;
-}
-#main .game {
-    display: inline;
-    float: left;
-}
-#main .game-info {
-    padding-top: 10px;
-    clear: both;
-    display: block;
-    width: 155px;
-}
-#main .game .game-info h3 a {
-    color: #fff;
-}
-#main .game .game-info p {
-    padding-top: 10px;
-}
-#main .browse {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-weight: bold;
-    font-style: italic;
-    clear: both;
-    float: right;
-}
-#highest h1 {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-#highest h3 {
-    padding-bottom: 10px;
-}
-#highest h3 a {
-    color: #fff;
-}
-#highest .thumb {
-    padding-right: 20px;
-}
-#highest .game-info {
-    width: 90%;
-}
-#highest .game {
-    padding-bottom: 30px;
-    clear: both;
-}
-</style>
-<tal:block tal:condition="DEBUG_MODE">
-    <script tal:attributes="src string:${HOST_URL}/js/jquery.js"></script>
-    <script tal:attributes="src string:${HOST_URL}/js/swfobject.js"></script>
-</tal:block>
-<tal:block tal:condition="not: DEBUG_MODE">
-    <script tal:attributes="src string:${HOST_URL}/js/gs.js"></script>
-</tal:block>
-<script type="text/javascript">
-function dc(categoryId) {
-    if (isNaN(categoryId)) {
-        return;
-    }
-    $("#main").fadeOut(50);
-    $.get("/categoryPage", {id: categoryId}, function(data) {
-        $("#main").html(data).fadeIn(50);
-    });
-}
-(function($) {
-})(jQuery);
-</script>
-</head>
-<body>
-
-<div id="header-outer">
-    <div id="header">
-        <div class="std-width">
-            <ul id="nav">
-                <li><a tal:attributes="href HOST_URL" class="active">Home</a></li>
-                <li><a tal:attributes="href string:${HOST_URL}/games">Games</a></li>
-                <li><a tal:attributes="href string:${HOST_URL}/contact">Contact</a></li>
-            </ul>
-            <div id="banner">
-                <h1 id="logo"><a tal:attributes="href HOST_URL">GameSnapper</a></h1>
+    <tal:block metal:fill-slot="prebody">
+        <div id="headline-outer">
+            <div id="headline">
+                <div class="std-width">
+                    <div id="latest">
+                        <h1 class="section">Latest Games</h1>
+                        <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber"><img
+                                tal:attributes="src string:${HOST_URL}/img/games/00061/enough-plumber.jpg; alt string:Enough Plumbers" /></a>
+                        </div>
+                        <div class="game-info">
+                            <h2><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber">Enough Plumbers</a></h2>
+                            <p>In the past, our attack against the humans failed, but
+                            this time, we won't fail. You must fight off humanity's
+                            defense lines, but beware; they have built a special energy
+                            field that will try to make you dizzy! Everything will be
+                            much harder than a common arcade shooter game.</p>
+                        </div>
+                        <p class="page"><a href="">●</a> <a href="">○</a> <a href="">○</a></p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </tal:block>
 
-<div id="headline-outer">
-    <div id="headline">
-        <div class="std-width">
-            <div id="latest">
-                <h1 class="section">Latest Games</h1>
-                <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber"><img
-                        tal:attributes="src string:${HOST_URL}/img/games/00061/enough-plumber.jpg; alt string:Enough Plumbers" /></a>
-                </div>
-                <div class="game-info">
-                    <h2><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber">Enough Plumbers</a></h2>
-                    <p>In the past, our attack against the humans failed, but
-                    this time, we won't fail. You must fight off humanity's
-                    defense lines, but beware; they have built a special energy
-                    field that will try to make you dizzy! Everything will be
-                    much harder than a common arcade shooter game.</p>
-                </div>
-                <p class="page"><a href="">●</a> <a href="">○</a> <a href="">○</a></p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="body-outer">
-    <div id="body">
-        <div class="std-width">
+    <tal:block metal:fill-slot="body">
             <div class="nav">
                 <ul class="front-cat">
                     <li tal:repeat="item category"><a href="" tal:attributes="onclick string:dc(${item/id});;return false; class php: repeat.item.start ? 'active' : NULL" tal:content="item/title"></a></li>
@@ -359,28 +74,5 @@ function dc(categoryId) {
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div id="footer">
-    <div class="std-width">
-        <p>Copyright &copy; <tal:block tal:replace="php: date('Y')" /> GameSnapper</p>
-    </div>
-</div>
-
-<tal:block tal:condition="not: DEBUG_MODE">
-<script type="text/javascript">
-var pkBaseURL = (("https:" == document.location.protocol) ? "https://analytics.gamesnapper.com/" : "http://analytics.gamesnapper.com/");
-document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-</script><script type="text/javascript">
-try {
-var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 8);
-piwikTracker.trackPageView();
-piwikTracker.enableLinkTracking();
-} catch( err ) {}
-</script><noscript><p><img src="http://analytics.gamesnapper.com/piwik.php?idsite=8" style="border:0" alt="" /></p></noscript>
+    </tal:block>
 </tal:block>
-
-</body>
-</html>
