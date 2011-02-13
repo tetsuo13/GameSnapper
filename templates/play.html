@@ -1,0 +1,27 @@
+<tal:block metal:use-macro="commonLayout.html/main">
+
+    <tal:block metal:fill-slot="head_javascript">
+        <script type="text/javascript">/*<![CDATA[*/
+        (function($) {
+            swfobject.registerObject("game", "9");
+        })(jQuery);
+        /*]]>*/</script>
+    </tal:block>
+
+    <tal:block metal:fill-slot="body">
+        <p tal:condition="not: result">Sorry, something went wrong.</p>
+
+        <tal:block tal:condition="result">
+            <object id="game" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" tal:attributes="width flash_width; height flash_height">
+            <param name="movie" tal:attributes="value flash_path" />
+            <!--[if !IE]>-->
+            <object type="application/x-shockwave-flash" tal:attributes="data flash_path; width flash_width; height flash_height">
+            <!--<![endif]-->
+              <p>Alternative content</p>
+            <!--[if !IE]>-->
+            </object>
+            <!--<![endif]-->
+            </object>
+        </tal:block>
+    </tal:block>
+</tal:block>

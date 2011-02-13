@@ -2,7 +2,7 @@
 /**
  *
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-18
  * @author    Andrei Nicholson
  */
@@ -19,7 +19,6 @@ class htmlTemplate extends PHPTAL {
         parent::__construct($templatePath);
 
         $this->setPhpCodeDestination(ROOT_DIR . 'templateCache');
-        $this->stripComments(TRUE);
         $this->setOutputMode(PHPTAL::HTML5);
     }
 }

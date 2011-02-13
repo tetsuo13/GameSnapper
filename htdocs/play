@@ -2,11 +2,82 @@
 /**
  * Game play page.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-28
  * @author    Andrei Nicholson
  */
 
 require_once '../lib/globals.php';
+require_once LIB_DIR . 'lib.htmlTemplate.php';
+require_once LIB_DIR . 'lib.db.php';
+
+$template = new htmlTemplate(TEMPLATE_DIR . 'play.html');
+
+if (!isset($_GET['id'], $_GET['title'])) {
+    // Do something.
+}
+
+$result =  getGame($_GET['id'], $_GET['title']);
+
+if (is_array($result) && count($result)) {
+    $template->set('flash_path', '/games/' . $result['filepath'] . '/' . $result['slug'] . '.swf');
+    list($width, $height) = scaleFlash(750, $result['width'], $result['height']);
+    $template->set('flash_width', $width);
+    $template->set('flash_height', $height);
+}
+
+$template->set('result', $result);
+
+try {
+    echo $template->execute();
+} catch (Exception $e) {
+    echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+/**
+ * @param int $maxWidth
+ * @param int $width
+ * @param int $height
+ *
+ * @return array
+ */
+function scaleFlash($maxWidth, $width, $height) {
+    if ($width <= $maxWidth) {
+        return array($width, $height);
+    }
+
+    $ratio = $maxWidth / $width;
+    $widthDiff = $ratio * $width;
+    $heightDiff = $ratio * $height;
+
+    return array($widthDiff, $heightDiff);
+}
+
+/**
+ * @param string $filepath
+ * @param string $slug
+ *
+ * @return array
+ */
+function getGame($filepath, $slug) {
+    try {
+        $sql = 'SELECT title, filepath, thumbtype, description, instructions,
+                       slug, width, height
+                FROM   game
+                WHERE  slug = :slug AND
+                       filepath = :filepath';
+
+        $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
+        $statement = $db->prepare($sql);
+
+        $statement->bindParam(':slug', $slug, PDO::PARAM_STR, 128);
+        $statement->bindParam(':filepath', $filepath, PDO::PARAM_STR, 16);
+
+        $statement->execute();
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        return NULL;
+    }
+}
 
 /** vim: set filetype=php: */
