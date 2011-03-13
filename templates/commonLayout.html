@@ -20,7 +20,7 @@
     <title>GameSnapper</title>
     <style type="text/css">
 html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+h1, h3, h4, h5, h6, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, font, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
@@ -79,6 +79,9 @@ body {
 }
 a {
     color: #fff;
+}
+b {
+    font-weight: bold;
 }
 .std-width {
     position: relative;
@@ -172,9 +175,6 @@ h1.section {
     font-size: 20px;
     color: #fff;
     text-transform: uppercase;
-}
-h2 {
-    font-size: 15px;
 }
 h3 {
     font-size: 13px;
@@ -286,6 +286,7 @@ h3 {
     </tal:block>
 
     <tal:block metal:define-slot="head_javascript" />
+    <tal:block metal:define-slot="head_css" />
     </head>
     <body>
 

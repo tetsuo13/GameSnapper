@@ -2,26 +2,70 @@
 
     <tal:block metal:fill-slot="head_javascript">
         <script type="text/javascript">/*<![CDATA[*/
-        (function($) {
-            swfobject.registerObject("game", "9");
-        })(jQuery);
+        $(function() {
+            swfobject.embedSWF("${flash_path}", "gcontainer", "${flash_width}", "${flash_height}", "9");
+        });
         /*]]>*/</script>
+    </tal:block>
+
+    <tal:block metal:fill-slot="head_css">
+        <style>
+        #gcontainer {
+            text-align: center;
+            display: block;
+            margin: 0 auto;
+            margin-left: -10px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            width: 100%;
+            background-color: #000;
+        }
+        #ginfo {
+            width: 95%;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #FFF4CF;
+            color: #000;
+        }
+        #ginfo, #gdet {
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+        #ginfo a, #ginfo a:visited {
+            color: #5a57b2;
+        }
+        #gdet {
+            padding: 10px;
+            background-color: #FFEAA3;
+        }
+        </style>
     </tal:block>
 
     <tal:block metal:fill-slot="body">
         <p tal:condition="not: result">Sorry, something went wrong.</p>
 
         <tal:block tal:condition="result">
-            <object id="game" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" tal:attributes="width flash_width; height flash_height">
-            <param name="movie" tal:attributes="value flash_path" />
-            <!--[if !IE]>-->
-            <object type="application/x-shockwave-flash" tal:attributes="data flash_path; width flash_width; height flash_height">
-            <!--<![endif]-->
-              <p>Alternative content</p>
-            <!--[if !IE]>-->
-            </object>
-            <!--<![endif]-->
-            </object>
+            <div id="gcontainer">Alternative content</div>
+
+            <div id="ginfo">
+                <h2 tal:content="title" />
+
+                <div id="gdet">
+                    <b>Added:</b> <span tal:replace="added" /><br />
+                    <b>Plays:</b> <span tal:replace="played" />
+                </div>
+
+                <p><b>Description</b><br /><span tal:replace="description" /></p>
+
+                <p><b>Tags</b><br />
+                    <span tal:repeat="category categories">
+                        <a href="" tal:content="category/title"></a><span tal:condition="not: repeat/category/end">, </span>
+                    </span>
+                </p>
+
+                <p><b>Instructions</b><br /><span tal:replace="instructions" /></p>
+            </div>
         </tal:block>
     </tal:block>
 </tal:block>
