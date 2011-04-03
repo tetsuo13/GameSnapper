@@ -392,9 +392,10 @@ function associateCategories(array $categories, db $db, array $categoryId,
  */
 function insertVendorFeed(db $db, PDOStatement $statement, $vendorId, $title,
                           $gameId) {
+    $banned = 0;
     $statement->bindParam(':vendor_id', $vendorId, PDO::PARAM_INT);
     $statement->bindParam(':title', $title, PDO::PARAM_STR, 128);
-    $statement->bindParam(':banned', 0);
+    $statement->bindParam(':banned', $banned);
     $statement->bindParam(':game_id', $gameId, PDO::PARAM_INT);
 
     $result = $statement->execute();
