@@ -1,4 +1,4 @@
-#!/home1/neoanime/opt-python/bin/python
+#!/usr/bin/python
 """
 Minifies JavaScript from many files to generate one file.
 
