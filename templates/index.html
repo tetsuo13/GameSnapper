@@ -11,9 +11,9 @@
             $.get("/categoryPage", {id: categoryId}, function(data) {
                 $("#main").html(data).fadeIn(50);
             });
+            $("a[id^='category-']").removeClass("active");
+            $("a[id^='category-" + categoryId + "']").addClass("active");
         }
-        $(function() {
-        });
         /*]]>*/</script>
     </tal:block>
 
@@ -43,7 +43,13 @@
     <tal:block metal:fill-slot="body">
             <div class="nav">
                 <ul class="front-cat">
-                    <li tal:repeat="item category"><a href="" tal:attributes="onclick string:dc(${item/id});;return false; class php: repeat.item.start ? 'active' : NULL" tal:content="item/title"></a></li>
+                    <li tal:repeat="item category">
+                        <a href=""
+                            tal:attributes="onclick string:dc(${item/id});;return false;
+                                            class php: repeat.item.start ? 'active' : NULL;
+                                            id string:category-${item/id}"
+                            tal:content="item/title"></a>
+                    </li>
                 </ul>
             </div>
             <div id="main">
