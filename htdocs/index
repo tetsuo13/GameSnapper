@@ -2,7 +2,7 @@
 /**
  * Main landing page.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-18
  * @author    Andrei Nicholson
  */
@@ -26,7 +26,7 @@ $highest = array();
 
 $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
         FROM     game
-        ORDER BY played
+        ORDER BY played DESC
         LIMIT    3';
 
 foreach ($db->query($sql) as $row) {
