@@ -105,6 +105,19 @@ function prepareCheckStatement(db $db) {
 }
 
 /**
+ * @param db $db
+ *
+ * @return PDOStatement
+ */
+function prepareVendorFeedStatement(db $db) {
+    $sqlInsert = 'INSERT INTO vendor_feed
+                  (vendor_id, title, banned, game_id)
+                  VALUES
+                  (:vendor_id, :title, :banned, :game_id)';
+    return $db->prepare($sqlInsert);
+}
+
+/**
  * @param string $url
  * @param string $tempDirectory
  *
@@ -367,6 +380,31 @@ function associateCategories(array $categories, db $db, array $categoryId,
             return FALSE;
         }
     }
+    return TRUE;
+}
+
+/**
+ * @param db           $db
+ * @param PDOStatement $statement
+ * @param int          $vendorIf
+ * @param string       $title
+ * @param int          $gameId
+ */
+function insertVendorFeed(db $db, PDOStatement $statement, $vendorId, $title,
+                          $gameId) {
+    $statement->bindParam(':vendor_id', $vendorId, PDO::PARAM_INT);
+    $statement->bindParam(':title', $title, PDO::PARAM_STR, 128);
+    $statement->bindParam(':banned', 0);
+    $statement->bindParam(':game_id', $gameId, PDO::PARAM_INT);
+
+    $result = $statement->execute();
+
+    if (!$result) {
+        echo "\tCould not insert into vendor feed", PHP_EOL;
+        print_r($statement->errorInfo());
+        return FALSE;
+    }
+
     return TRUE;
 }
 

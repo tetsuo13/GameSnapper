@@ -32,6 +32,7 @@ if ($xml === FALSE) {
 $db = prepareDb();
 
 $insertStatement = prepareInsertStatement($db);
+$vendorFeedStatement = prepareVendorFeedStatement($db);
 $checkStatement = prepareCheckStatement($db);
 $categoryStatement = prepareCategoryXrefInsertStatement($db);
 $categoryId = getExistingCategories($db);
@@ -101,6 +102,14 @@ foreach ($xml->game as $g) {
         removePull($finalContents);
         continue;
     }
+
+    if (!insertVendorFeed($db, $vendorFeedStatement, $vendorIdPlaytomic,
+                          $g->title, $gameId)) {
+        $db->rollBack();
+        removePull($finalContents);
+        continue;
+    }
+
 
     $db->commit();
 }

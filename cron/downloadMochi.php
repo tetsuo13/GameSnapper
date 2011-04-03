@@ -27,6 +27,7 @@ if ($xml === FALSE) {
 $db = prepareDb();
 
 $insertStatement = prepareInsertStatement($db);
+$vendorFeedStatement = prepareVendorFeedStatement($db);
 $checkStatement = prepareCheckStatement($db);
 $categoryStatement = prepareCategoryXrefInsertStatement($db);
 $categoryId = getExistingCategories($db);
@@ -123,6 +124,13 @@ foreach ($xml->entry as $g) {
 
     if (!associateCategories($categories, $db, $categoryId,
                              $categoryStatement, $gameId)) {
+        $db->rollBack();
+        removePull($finalContents);
+        continue;
+    }
+
+    if (!insertVendorFeed($db, $vendorFeedStatement, $vendorIdMochi,
+                          $g->title, $gameId)) {
         $db->rollBack();
         removePull($finalContents);
         continue;
