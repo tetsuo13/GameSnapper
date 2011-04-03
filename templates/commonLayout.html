@@ -294,13 +294,18 @@ h3 {
     </head>
     <body>
 
+    <tal:block
+        tal:define="global activeHome string:inactive;
+                    global activeGames string:inactive;
+                    global activeContact string:inactive" />
+
     <div id="header-outer">
         <div id="header">
             <div class="std-width">
                 <ul id="nav">
-                    <li><a tal:attributes="href HOST_URL" class="active">Home</a></li>
-                    <li><a tal:attributes="href string:${HOST_URL}/games">Games</a></li>
-                    <li><a tal:attributes="href string:${HOST_URL}/contact">Contact</a></li>
+                    <li><a tal:attributes="href HOST_URL; class activeHome">Home</a></li>
+                    <li><a tal:attributes="href string:${HOST_URL}/games; class activeGames">Games</a></li>
+                    <li><a tal:attributes="href string:${HOST_URL}/contact; class activeContact">Contact</a></li>
                 </ul>
                 <div id="banner">
                     <h1 id="logo"><a tal:attributes="href HOST_URL">GameSnapper</a></h1>
