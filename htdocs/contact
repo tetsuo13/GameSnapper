@@ -1,0 +1,64 @@
+<?php
+/**
+ * Contact page.
+ *
+ * @copyright 2011 GameSnapper
+ * @since     2011-04-02
+ * @author    Andrei Nicholson
+ */
+
+require_once '../lib/globals.php';
+require_once LIB_DIR . 'lib.htmlTemplate.php';
+
+$template = new htmlTemplate(TEMPLATE_DIR . 'contact.html');
+$template->set('SERVER', $_SERVER);
+$template->set('POST', $_POST);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $errors = array();
+
+    $name = (isset($_POST['n']) ? (string) trim($_POST['n']) : NULL);
+    $email = (isset($_POST['e']) ? (string) trim($_POST['e']) : NULL);
+    $message = (isset($_POST['m']) ? (string) trim($_POST['m']) : NULL);
+
+    if ($name === NULL || $name == '') {
+        $errors[] = 'Name must be supplied';
+    }
+    if ($email === NULL || $email == '') {
+        $errors[] = 'Email address must be valid';
+    } else {
+        require_once LIB_DIR . 'is_email.php';
+        if (!is_email($email)) {
+            $errors[] = 'Email address must be valid';
+        }
+    }
+    if ($message === NULL || $message == '') {
+        $errors[] = 'Message cannot be blank';
+    }
+
+    if (!count($errors)) {
+        $subject = 'GameSnapper Contact Form Submission';
+        $body = '';
+
+        if (isset($_SERVER['REMOTE_ADDR']) &&
+                !empty($_SERVER['REMOTE_ADDR'])) {
+            $body .= 'IP ' . $_SERVER['REMOTE_ADDR'] . ' ('
+                   . gethostbyaddr($_SERVER['REMOTE_ADDR']) . ")\n\n";
+        }
+
+        $body .= "Name: $name\nEmail: $email\nMessage: $message";
+        mail('connect@gamesnapper.com', $subject, $body);
+
+        $template->set('success', TRUE);
+    } else {
+        $template->set('errors', $errors);
+    }
+}
+
+try {
+    echo $template->execute();
+} catch (Exception $e) {
+    echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+/** vim: set filetype=php: */

@@ -1,0 +1,98 @@
+<tal:block metal:use-macro="commonLayout.html/main">
+
+    <tal:block metal:fill-slot="head_javascript">
+        <script type="text/javascript">/*<![CDATA[*/
+        $(function() {
+        });
+        /*]]>*/</script>
+    </tal:block>
+
+    <tal:block metal:fill-slot="head_css">
+        <style>
+        h3 {
+            padding-top: 1em;
+            font-size: 120%;
+        }
+        #f {
+        padding-top: 2em;
+        }
+        .field {
+            padding-bottom: 2em;
+        }
+        #info {
+            width: 280px;
+            float: left;
+        }
+        #form {
+            margin-left: 305px;
+        }
+        label {
+            font-weight: bold;
+        }
+        body {
+            color: #fff;
+        }
+        .errors {
+            border-top: 1px solid red;
+            border-bottom: 1px solid red;
+            background-color: #f5e5e5;
+            color: #000;
+            width: 90%;
+            padding-left: 1em;
+            padding-bottom: 1em;
+            margin-bottom: 2em;
+        }
+        </style>
+    </tal:block>
+
+    <tal:block metal:fill-slot="body">
+        <h3>Send us your thoughts</h3>
+
+        <tal:block tal:condition="not: exists: success">
+            <div id="f">
+                <div id="info">
+                    <p>Questions? Comments? Want to see something added? Have a
+                    game that you want featured? Drop us a line using the feedback
+                    form.</p>
+
+                    <p>Or you can also email us directly at
+                    <a href="mailto:connect@gamesnapper.com">connect@gamesnapper.com</a></p>
+                </div>
+                <div id="form">
+                    <div class="errors" tal:condition="exists: errors">
+                        <p>There were a few problems:</p>
+                        <ul>
+                            <li tal:repeat="error errors" tal:content="error" />
+                        </ul>
+                    </div>
+
+                    <form method="post" tal:attributes="action SERVER/PHP_SELF">
+                        <div class="field">
+                            <label>Name:</label><br />
+                            <input type="text" tal:attributes="value POST/n | ''" name="n" maxlength="64" />
+                        </div>
+
+                        <div class="field">
+                            <label>Email:</label><br />
+                            <input type="text" tal:attributes="value POST/e | ''" name="e" maxlength="128" />
+                        </div>
+
+                        <div class="field">
+                            <label>Message:</label><br />
+                            <textarea name="m" tal:content="POST/m | ''" rows="8" cols="50"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <input type="submit" value="Send" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </tal:block>
+
+        <tal:block tal:condition="exists: success">
+            <p>Thank you for your feedback, <span tal:replace="POST/n" />.
+            Your feedback is important to us.</p>
+        </tal:block>
+    </tal:block>
+</tal:block>
