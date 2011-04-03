@@ -30,11 +30,19 @@ function gameExists($title, PDOStatement $statement) {
         return TRUE;
     }
 
-    if ($statement->fetchColumn() == 0) {
-        return FALSE;
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+    // Abort on error.
+    if ($row === FALSE || empty($row['game_id'])) {
+        return TRUE;
     }
 
-    return TRUE;
+    // Game exists if a game ID was found or if it's banned.
+    if (!empty($row['game_id']) || $row['banned'] == 1) {
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 /**
@@ -97,11 +105,12 @@ function prepareInsertStatement(db $db) {
  *
  * @return PDOStatement
  */
-function prepareCheckStatement(db $db) {
-    $sqlCheck = 'SELECT COUNT(id) AS num_games
-                 FROM   game
-                 WHERE  title = :title';
-    return $db->prepare($sqlCheck);
+function prepareVendorFeedStatement(db $db) {
+    $sqlInsert = 'INSERT INTO vendor_feed
+                  (vendor_id, title, banned, game_id)
+                  VALUES
+                  (:vendor_id, :title, :banned, :game_id)';
+    return $db->prepare($sqlInsert);
 }
 
 /**
@@ -109,12 +118,11 @@ function prepareCheckStatement(db $db) {
  *
  * @return PDOStatement
  */
-function prepareVendorFeedStatement(db $db) {
-    $sqlInsert = 'INSERT INTO vendor_feed
-                  (vendor_id, title, banned, game_id)
-                  VALUES
-                  (:vendor_id, :title, :banned, :game_id)';
-    return $db->prepare($sqlInsert);
+function prepareVendorFeedCheckStatement(db $db) {
+    $sqlCheck = 'SELECT game_id, banned
+                 FROM   vendor_feed
+                 WHERE  title = :title';
+    return $db->prepare($sqlCheck);
 }
 
 /**

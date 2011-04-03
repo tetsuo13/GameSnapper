@@ -33,14 +33,14 @@ $db = prepareDb();
 
 $insertStatement = prepareInsertStatement($db);
 $vendorFeedStatement = prepareVendorFeedStatement($db);
-$checkStatement = prepareCheckStatement($db);
+$vendorCheckStatement = prepareVendorFeedCheckStatement($db);
 $categoryStatement = prepareCategoryXrefInsertStatement($db);
 $categoryId = getExistingCategories($db);
 
 foreach ($xml->game as $g) {
     echo PHP_EOL, 'Processing ', $g->title, PHP_EOL;
 
-    if (gameExists($g->title, $checkStatement)) {
+    if (gameExists($g->title, $vendorCheckStatement)) {
         echo "\tTitle already exists", PHP_EOL;
         continue;
     }
