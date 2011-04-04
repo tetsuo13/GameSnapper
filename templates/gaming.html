@@ -1,0 +1,76 @@
+<tal:block metal:use-macro="commonLayout.html/main"
+    tal:define="activeGames string:active">
+
+    <tal:block metal:fill-slot="head_javascript">
+        <script type="text/javascript">/*<![CDATA[*/
+        $(function() {
+        });
+        /*]]>*/</script>
+    </tal:block>
+
+    <tal:block metal:fill-slot="head_css">
+        <style>
+        h3 {
+            padding-top: 1em;
+            font-size: 120%;
+        }
+        #f {
+            padding-top: 2em;
+        }
+        #cat {
+            width: 170px;
+            float: left;
+        }
+        #list li {
+            margin-left: 0px;
+            list-style-type: none;
+            line-height: 1.5em;
+        }
+        #list li a {
+            display: block;
+        }
+        #list li a.active {
+            font-weight: bold;
+        }
+        #browse {
+            margin-left: 175px;
+        }
+        body {
+            color: #fff;
+        }
+        </style>
+    </tal:block>
+
+    <tal:block metal:fill-slot="body">
+        <h3>Browse Games</h3>
+
+        <div id="f">
+            <div id="cat">
+                <div id="list">
+                    <p><b>Categories</b></p>
+                    <ul>
+                        <li><a tal:attributes="href string:${HOST_URL}/gaming;
+                                               class php:selectedCategory EQ NULL ? 'active' : NULL">All Games</a></li>
+                        <li tal:repeat="category categories">
+                            <a tal:attributes="href php:categoryLink(category['title']);
+                                               class php:category['id'] EQ selectedCategory ? 'active' : NULL"
+                                tal:content="category/title"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="browse">
+                <div class="game" tal:repeat="item games">
+                    <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
+                            tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>
+                    </div>
+                    <div class="game-info">
+                        <h3><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}" tal:content="item/title"></a></h3>
+                        <p tal:content="item/description"></p>
+                    </div>
+                    <br tal:condition="php: (repeat.item.number % 3) == 0" />
+                </div>
+            </div>
+        </div>
+    </tal:block>
+</tal:block>

@@ -2,7 +2,7 @@
 /**
  * Functions related to game data and display.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-12-05
  * @author    Andrei Nicholson
  */
@@ -22,4 +22,15 @@ function trimText($text, $limit) {
         return rtrim(implode('', array_slice($matches[0], 0, $limit))) . $extra;
     }
     return $text;
+}
+
+/**
+ * Generate link to the browse games by category page.
+ *
+ * @param string $title Category title.
+ *
+ * @return string Full URL.
+ */
+function categoryLink($title) {
+    return HOST_URL . '/' . urlencode(strtolower($title) . '-games');
 }

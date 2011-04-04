@@ -1,0 +1,105 @@
+<?php
+/**
+ * Game browser.
+ *
+ * @copyright 2011 GameSnapper
+ * @since     2011-04-03
+ * @author    Andrei Nicholson
+ */
+
+require_once '../lib/globals.php';
+require_once LIB_DIR . 'lib.htmlTemplate.php';
+require_once LIB_DIR . 'lib.db.php';
+require_once LIB_DIR . 'lib.gameDisplay.php';
+require_once INCLUDE_DIR . 'inc.category.php';
+
+define('GAMES_PER_PAGE', 9);
+
+$template = new htmlTemplate(TEMPLATE_DIR . 'gaming.html');
+
+$selectedCategory = NULL;
+
+if (isset($_GET['category']) && trim((string) $_GET['category']) != '') {
+    $selectedCategory = findCategory($category,
+                                     trim((string) $_GET['category']));
+}
+
+$template->set('selectedCategory', $selectedCategory);
+$template->set('categories', $category);
+$template->set('games', getGames($selectedCategory));
+
+try {
+    echo $template->execute();
+} catch (Exception $e) {
+    echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+/**
+ * @param array  $category
+ * @param string $categoryTitle
+ *
+ * @return int
+ */
+function findCategory(array $category, $categoryTitle) {
+    $categoryTitle = strtolower($categoryTitle);
+
+    foreach ($category as $id => $v) {
+        if (strtolower($v['title']) == $categoryTitle) {
+            return $id;
+        }
+    }
+
+    return NULL;
+}
+
+/**
+ * @param int $categoryId
+ *
+ * @return array
+ */
+function getGames($categoryId) {
+    $games = array();
+
+    try {
+        $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
+        $statement = getSqlStatement($db, $categoryId);
+        $statement->execute();
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $row['description'] = trimText($row['description'], 20);
+            $games[] = $row;
+        }
+    } catch (Exception $e) {
+    }
+
+    return $games;
+}
+
+/**
+ * @param db  $db
+ * @param int $categoryId
+ *
+ * @return string
+ */
+function getSqlStatement(db $db, $categoryId) {
+    if ($categoryId !== NULL) {
+        $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
+                FROM     game
+                JOIN     category_game_xref
+                ON       game_id = id
+                WHERE    category_id = :categoryId
+                LIMIT    ' . GAMES_PER_PAGE;
+
+        $statement = $db->prepare($sql);
+        $statement->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
+        return $statement;
+    }
+
+    $sql = 'SELECT title, id, filepath, slug, description, thumbtype
+            FROM   game
+            LIMIT  ' . GAMES_PER_PAGE;
+
+    return $db->prepare($sql);
+}
+
+/** vim: set filetype=php: */

@@ -236,23 +236,24 @@ h3 {
 #main {
     padding-top: 20px;
 }
-#main .game {
+.game {
     display: inline;
     float: left;
+    height: 260px;
 }
-#main .game-info {
+.game-info {
     padding-top: 10px;
     clear: both;
     display: block;
     width: 155px;
 }
-#main .game .game-info h3 a {
+.game .game-info h3 a {
     color: #fff;
 }
-#main .game .game-info p {
+.game .game-info p {
     padding-top: 10px;
 }
-#main .browse {
+.browse {
     padding-top: 20px;
     padding-bottom: 20px;
     font-weight: bold;
@@ -304,7 +305,7 @@ h3 {
             <div class="std-width">
                 <ul id="nav">
                     <li><a tal:attributes="href HOST_URL; class activeHome">Home</a></li>
-                    <li><a tal:attributes="href string:${HOST_URL}/games; class activeGames">Games</a></li>
+                    <li><a tal:attributes="href string:${HOST_URL}/gaming; class activeGames">Games</a></li>
                     <li><a tal:attributes="href string:${HOST_URL}/contact; class activeContact">Contact</a></li>
                 </ul>
                 <div id="banner">

@@ -13,5 +13,6 @@
         </div>
         <br tal:condition="php: (repeat.item.number % 3) == 0" />
     </div>
-    <p class="browse"><a href="" tal:content="string:Browse All ${category/title} Games &raquo;"></a></p>
+    <p class="browse"><a tal:attributes="href php:categoryLink(category['title'])"
+                        tal:content="string:Browse All ${category/title} Games &raquo;"></a></p>
 </tal:block>

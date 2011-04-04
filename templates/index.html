@@ -63,7 +63,7 @@
                     </div>
                     <br tal:condition="php: (repeat.item.number % 3) == 0" />
                 </div>
-                <p class="browse"><a href="">Browse All Action Games &raquo;</a></p>
+                <p class="browse"><a tal:attributes="href php:categoryLink('action')">Browse All Action Games &raquo;</a></p>
             </div>
             <div class="sidebar">
 <script type="text/javascript">/*<![CDATA[*/
