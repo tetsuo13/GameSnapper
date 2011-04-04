@@ -38,13 +38,15 @@ $template->set('highest', $highest);
 
 $game = array();
 
-$sql = 'SELECT   title, id, filepath, slug, description, thumbtype
+$firstHomepageCategory = getFirstCategoryOnHomepage($category);
+
+$sql = "SELECT   title, id, filepath, slug, description, thumbtype
         FROM     game
         JOIN     category_game_xref
         ON       game_id = id
-        WHERE    category_id = 4
+        WHERE    category_id = $firstHomepageCategory
         ORDER BY played
-        LIMIT    9';
+        LIMIT    9";
 
 foreach ($db->query($sql) as $row) {
     $row['description'] = trimText($row['description'], 20);
@@ -62,6 +64,23 @@ try {
     echo $template->execute();
 } catch (Exception $e) {
     echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+/**
+ * @param array $category
+ *
+ * @return int
+ */
+function getFirstCategoryOnHomepage(array $category) {
+    foreach ($category as $id => $v) {
+        if ($v['homepage'] == 1) {
+            return $id;
+        }
+    }
+
+    // Not found for some reason, default to first category.
+    reset($category);
+    return key($category);
 }
 
 /** vim: set filetype=php: */

@@ -64,11 +64,11 @@ function getGames($categoryId) {
         $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
         $statement = getSqlStatement($db, $categoryId);
         $statement->execute();
+        $games = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $row['description'] = trimText($row['description'], 20);
-            $games[] = $row;
-        }
+        array_walk($games,
+                   create_function('&$v',
+                                   '$v["description"] = trimText($v["description"], 20);'));
     } catch (Exception $e) {
     }
 
