@@ -24,9 +24,11 @@ if (isset($_GET['category']) && trim((string) $_GET['category']) != '') {
                                      trim((string) $_GET['category']));
 }
 
+list($games, $numGames) = getGames($selectedCategory);
+
 $template->set('selectedCategory', $selectedCategory);
 $template->set('categories', $category);
-$template->set('games', getGames($selectedCategory));
+$template->set('games', $games);
 
 try {
     echo $template->execute();
@@ -58,30 +60,36 @@ function findCategory(array $category, $categoryTitle) {
  * @return array
  */
 function getGames($categoryId) {
-    $games = array();
+    $result = array(0 => array(),
+                    1 => 0);
 
     try {
         $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
-        $statement = getSqlStatement($db, $categoryId);
+        list($statement, $numGames) = getSqlStatement($db, $categoryId);
         $statement->execute();
         $games = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         array_walk($games,
                    create_function('&$v',
                                    '$v["description"] = trimText($v["description"], 20);'));
+
+        $result[0] = $games;
+        $result[1] = $numGames;
     } catch (Exception $e) {
     }
 
-    return $games;
+    return $result;
 }
 
 /**
  * @param db  $db
  * @param int $categoryId
  *
- * @return string
+ * @return array
  */
 function getSqlStatement(db $db, $categoryId) {
+    $result = array();
+
     if ($categoryId !== NULL) {
         $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
                 FROM     game
@@ -92,14 +100,54 @@ function getSqlStatement(db $db, $categoryId) {
 
         $statement = $db->prepare($sql);
         $statement->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
-        return $statement;
+
+        $result[0] = $statement;
+        $result[1] = getCategoryNumberOfGames($db, $categoryId);
+
+        return $result;
     }
 
     $sql = 'SELECT title, id, filepath, slug, description, thumbtype
             FROM   game
             LIMIT  ' . GAMES_PER_PAGE;
 
-    return $db->prepare($sql);
+    $result[0] = $db->prepare($sql);
+    $result[1] = getTotalNumberOfGames($db);
+
+    return $result;
+}
+
+/**
+ * @param db $db
+ *
+ * @return int
+ */
+function getTotalNumberOfGames(db $db) {
+    $sql = 'SELECT COUNT(*) AS num_games
+            FROM   game';
+    $row = $db->query($sql);
+
+    foreach ($row as $x) {
+        return $x['num_games'];
+    }
+}
+
+/**
+ * @param db  $db
+ * @param int $categoryId
+ *
+ * @return int
+ */
+function getCategoryNumberOfGames(db $db, $categoryId) {
+    $sql = 'SELECT num_games
+            FROM   category
+            WHERE  id = :category_id';
+
+    $statement = $db->prepare($sql);
+    $statement->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+    $statement->execute();
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    return $result['num_games'];
 }
 
 /** vim: set filetype=php: */
