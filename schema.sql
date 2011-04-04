@@ -80,6 +80,7 @@ CREATE TABLE category (
 id              SERIAL PRIMARY KEY,
 title           VARCHAR(64) NOT NULL,
 homepage        SMALLINT NOT NULL,
+num_games       SMALLINT NOT NULL DEFAULT 0,
 
 UNIQUE (title),
 CONSTRAINT category_valid_homepage CHECK (homepage = 0 OR homepage = 1)

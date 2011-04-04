@@ -387,6 +387,11 @@ function associateCategories(array $categories, db $db, array $categoryId,
             print_r($statement->errorInfo());
             return FALSE;
         }
+
+        $sql = 'UPDATE category
+                SET    num_games = num_games + 1
+                WHERE  id = ' . $categoryId[$title];
+        $result = $db->exec($sql);
     }
     return TRUE;
 }
