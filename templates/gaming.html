@@ -21,16 +21,29 @@
             width: 170px;
             float: left;
         }
+        #list {
+            background-color: #4d1308;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            padding: 1em;
+            margin-right: 0.5em;
+        }
+        #list h3 {
+            padding-bottom: 1em;
+            text-transform: uppercase;
+        }
         #list li {
             margin-left: 0px;
             list-style-type: none;
-            line-height: 1.5em;
+            line-height: 1.75em;
         }
         #list li a {
             display: block;
         }
         #list li a.active {
             font-weight: bold;
+            background-color: #281308;
         }
         #browse {
             margin-left: 175px;
@@ -47,7 +60,7 @@
         <div id="f">
             <div id="cat">
                 <div id="list">
-                    <p><b>Categories</b></p>
+                    <h3>Categories</h3>
                     <ul>
                         <li><a tal:attributes="href string:${HOST_URL}/gaming;
                                                class php:selectedCategory EQ NULL ? 'active' : NULL">All Games</a></li>
