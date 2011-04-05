@@ -20,7 +20,7 @@ RewriteRule ^(.*)$ http://www.gamesnapper.com/$1 [R=301,NC,L]
 RewriteRule ^play/(\d+)\-(.*)$ /play?id=$1&title=$2
 
 # URLs to browse games by category will follow pattern "<category.title>-games".
-RewriteRule ^(.*)-games$ /gaming?category=$1
+RewriteRule ^(.*)-games(/([0-9]?))? /gaming?category=$1&page=$2
 
 # Gzip compression.
 <IfModule mod_deflate.c>

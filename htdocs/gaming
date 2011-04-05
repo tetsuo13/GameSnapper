@@ -24,11 +24,28 @@ if (isset($_GET['category']) && trim((string) $_GET['category']) != '') {
                                      trim((string) $_GET['category']));
 }
 
+$currentPage = 0;
+
 list($games, $numGames) = getGames($selectedCategory);
+
+$numPages = ceil($numGames / GAMES_PER_PAGE);
+
+if (isset($_GET['page']) && strlen((string) $_GET['page']) >= 2) {
+    $requestedPage = (int) substr((string) $_GET['page'], 1);
+
+    if ($requestedPage >= 0 && $requestedPage <= $numPages) {
+        $currentPage = $requestedPage;
+    }
+}
 
 $template->set('selectedCategory', $selectedCategory);
 $template->set('categories', $category);
 $template->set('games', $games);
+$template->set('SERVER', $_SERVER);
+$template->set('numPages', $numPages);
+$template->set('currentPage', $currentPage);
+$template->set('previousPage', ($currentPage != 0 ? ($currentPage - 1) : 0));
+$template->set('nextPage', ($currentPage != $numPages ? ($currentPage + 1) : $numPages));
 
 try {
     echo $template->execute();

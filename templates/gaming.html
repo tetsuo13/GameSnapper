@@ -5,7 +5,8 @@
         <script type="text/javascript">/*<![CDATA[*/
         $(function() {
         });
-        /*]]>*/</script>
+        /*]]>*/
+        </script>
     </tal:block>
 
     <tal:block metal:fill-slot="head_css">
@@ -51,6 +52,25 @@
         body {
             color: #fff;
         }
+        .pg {
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+        .pg li {
+            display: inline;
+            list-style-type: none;
+            margin: 3px;
+        }
+        .pg a {
+            padding: 2px 4px;
+            border: 1px solid #454F5C;
+            background: #5B6879;
+            color: #fff;
+            text-decoration: none;
+        }
+        .pg a.active {
+            background-color: #000;
+        }
         </style>
     </tal:block>
 
@@ -73,6 +93,20 @@
                 </div>
             </div>
             <div id="browse">
+                <ul class="pg">
+                    <li tal:condition="php: currentPage NE 0">
+                        <a tal:attributes="href php: SERVER['REQUEST_URI'] . '?p=' . (currentPage - 1)">&laquo; Prev</a>
+                    </li>
+                    <li tal:repeat="page php: range(1, numPages)">
+                        <a tal:attributes="href php: SERVER['REQUEST_URI'] . '?p=' . page;
+                                           class php: (currentPage + 1 EQ page ? 'active' : NULL)"
+                            tal:content="page"></a>
+                    </li>
+                    <li tal:condition="php: currentPage NE numPages">
+                        <a tal:attributes="href php: SERVER['REQUEST_URI'] . '?p=' . (currentPage + 2)">Next &raquo;</a>
+                    </li>
+                </ul>
+ 
                 <div class="game" tal:repeat="item games">
                     <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
                             tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>
@@ -83,7 +117,7 @@
                     </div>
                     <br tal:condition="php: (repeat.item.number % 3) == 0" />
                 </div>
-            </div>
+           </div>
         </div>
     </tal:block>
 </tal:block>
