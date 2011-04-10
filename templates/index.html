@@ -3,8 +3,6 @@
 
     <tal:block metal:fill-slot="head_javascript">
         <script type="text/javascript">/*<![CDATA[*/
-        $(function() {
-        });
         function dc(categoryId) {
             if (isNaN(categoryId)) {
                 return;
@@ -53,8 +51,39 @@
             clear: both;
             float: right;
         }
+        .fg {
+            min-width: 300px;
+            width: auto !important;
+            width: 300px;
+        }
         .fgh {
             display: none;
+        }
+        #latest, #latest a {
+            color: #fff;
+        }
+        #latest {
+            padding: 25px;
+        }
+        #latest h1 {
+            padding-bottom: 20px;
+        }
+        #latest .gi {
+            padding-top: 0;
+            margin-top: 0;
+            float: right;
+            width: 550px;
+        }
+        #latest .gi h2 {
+            margin-top: 0;
+        }
+        #latest .thumb {
+            float: left;
+            padding-right: 30px;
+            padding-left: 20px;
+        }
+        #latest .thumb img {
+            display: inline;
         }
         </style>
     </tal:block>
@@ -82,7 +111,7 @@
                                     tal:attributes="src string:${HOST_URL}/img/games/${game/filepath}/${game/slug}.${game/thumbtype};
                                                     alt game/title" /></a>
                                 </div>
-                                <div class="game-info">
+                                <div class="gi">
                                     <h2><a tal:attributes="href string:${HOST_URL}/play/${game/filepath}-${game/slug}" tal:content="game/title"></a></h2>
                                     <p tal:content="game/description"></p>
                                 </div>
@@ -128,9 +157,11 @@ google_ad_width = 250;
 google_ad_height = 250;
 /*]]>*/
 </script>
+<!--
 <script type="text/javascript"
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
+-->
                 <div id="highest">
                     <h1 class="section">Highest Rated</h1>
                     <div class="game" tal:repeat="item highest">
