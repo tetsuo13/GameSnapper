@@ -2,7 +2,24 @@
     tal:define="activeHome string:active">
 
     <tal:block metal:fill-slot="head_javascript">
-        <script type="text/javascript">/*<![CDATA[*/
+        <script type="text/javascript">
+        $(function() {
+            var numFeatured = <tal:block tal:replace="numFeaturedGames" />,
+                featuredGames = $(".fg"),
+                previousFeatured = 0;
+            swapFeatured();
+
+            function swapFeatured() {
+                do {
+                    var nextFeatured = Math.floor(Math.random() * numFeatured);
+                } while (nextFeatured == previousFeatured);
+                $(featuredGames[previousFeatured]).fadeOut(500, function() {
+                    $(featuredGames[nextFeatured]).fadeIn(500);
+                });
+                previousFeatured = nextFeatured;
+                setTimeout(swapFeatured, 5000);
+            }
+        });
         function dc(categoryId) {
             if (isNaN(categoryId)) {
                 return;
@@ -14,7 +31,7 @@
             $("a[id^='category-']").removeClass("active");
             $("a[id^='category-" + categoryId + "']").addClass("active");
         }
-        /*]]>*/</script>
+        </script>
     </tal:block>
 
     <tal:block metal:fill-slot="head_css">
