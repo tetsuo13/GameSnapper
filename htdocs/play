@@ -12,6 +12,7 @@ require_once LIB_DIR . 'lib.htmlTemplate.php';
 require_once LIB_DIR . 'lib.db.php';
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'play.html');
+$template->set('pageTitle', 'GameSnapper');
 
 if (!isset($_GET['id'], $_GET['title'])) {
     // Do something.
@@ -32,6 +33,7 @@ if (is_array($result) && count($result) == 2) {
     $template->set('added', date('n/j/Y', strtotime($game['added'])));
     $template->set('played', number_format($game['played']));
     $template->set('categories', $category);
+    $template->set('pageTitle', $game['title'] . ' - GameSnapper');
 
     updatePlayCounter($game['id']);
 }

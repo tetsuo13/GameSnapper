@@ -16,6 +16,7 @@ require_once INCLUDE_DIR . 'inc.category.php';
 define('GAMES_PER_PAGE', 9);
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'gaming.html');
+$template->set('pageTitle', 'GameSnapper Browse');
 
 $pageUrl = $_SERVER['PHP_SELF'];
 $selectedCategory = NULL;

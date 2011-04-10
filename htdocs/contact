@@ -11,6 +11,7 @@ require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.htmlTemplate.php';
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'contact.html');
+$template->set('pageTitle', 'GameSnapper Support');
 $template->set('SERVER', $_SERVER);
 $template->set('POST', $_POST);
 

@@ -14,6 +14,7 @@ require_once LIB_DIR . 'lib.gameDisplay.php';
 require_once INCLUDE_DIR . 'inc.category.php';
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'index.html');
+$template->set('pageTitle', 'GameSnapper');
 
 try {
     $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
