@@ -3,6 +3,8 @@
 
     <tal:block metal:fill-slot="head_javascript">
         <script type="text/javascript">/*<![CDATA[*/
+        $(function() {
+        });
         function dc(categoryId) {
             if (isNaN(categoryId)) {
                 return;
@@ -51,6 +53,9 @@
             clear: both;
             float: right;
         }
+        .fgh {
+            display: none;
+        }
         </style>
     </tal:block>
 
@@ -60,17 +65,29 @@
                 <div class="std-width">
                     <div id="latest">
                         <h1 class="section">Latest Games</h1>
-                        <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber"><img
-                                tal:attributes="src string:${HOST_URL}/img/games/00061/enough-plumber.jpg; alt string:Enough Plumbers" /></a>
-                        </div>
-                        <div class="game-info">
-                            <h2><a tal:attributes="href string:${HOST_URL}/play/00061-enough-plumber">Enough Plumbers</a></h2>
-                            <p>In the past, our attack against the humans failed, but
-                            this time, we won't fail. You must fight off humanity's
-                            defense lines, but beware; they have built a special energy
-                            field that will try to make you dizzy! Everything will be
-                            much harder than a common arcade shooter game.</p>
-                        </div>
+
+                        <!--
+                            Hide all but the first game block.
+                        -->
+                        <tal:block tal:repeat="game featuredGames">
+                            <tal:block tal:condition="not: repeat/game/start">
+                                <tal:block tal:define="global className string:fg fgh" />
+                            </tal:block>
+                            <tal:block tal:condition="repeat/game/start">
+                                <tal:block tal:define="global className string:fg" />
+                            </tal:block>
+
+                            <div tal:attributes="class className">
+                                <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${game/filepath}-${game/slug}"><img
+                                    tal:attributes="src string:${HOST_URL}/img/games/${game/filepath}/${game/slug}.${game/thumbtype};
+                                                    alt game/title" /></a>
+                                </div>
+                                <div class="game-info">
+                                    <h2><a tal:attributes="href string:${HOST_URL}/play/${game/filepath}-${game/slug}" tal:content="game/title"></a></h2>
+                                    <p tal:content="game/description"></p>
+                                </div>
+                            </div>
+                        </tal:block>
                     </div>
                 </div>
             </div>

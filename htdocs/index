@@ -37,6 +37,14 @@ foreach ($db->query($sql) as $row) {
 
 $template->set('highest', $highest);
 
+$sql = 'SELECT   title, id, filepath, slug, description, thumbtype
+        FROM     game
+        WHERE    featured = 1';
+
+$statement = $db->query($sql);
+$template->set('featuredGames', $statement->fetchAll(PDO::FETCH_ASSOC));
+$template->set('numFeaturedGames', $statement->rowCount());
+
 $game = array();
 
 $firstHomepageCategory = getFirstCategoryOnHomepage($category);
