@@ -94,16 +94,16 @@
             </div>
             <div id="browse">
                 <ul class="pg">
-                    <li tal:condition="php: currentPage NE 0">
-                        <a tal:attributes="href php: SERVER['REQUEST_URI'] . '?p=' . (currentPage - 1)">&laquo; Prev</a>
+                    <li tal:condition="php: currentPage GT 1">
+                        <a tal:attributes="href php: pageUrl . '-' . (currentPage - 1)">&laquo; Prev</a>
                     </li>
                     <li tal:repeat="page php: range(1, numPages)">
-                        <a tal:attributes="href php: SERVER['REQUEST_URI'] . '?p=' . page;
-                                           class php: (currentPage + 1 EQ page ? 'active' : NULL)"
+                        <a tal:attributes="href php: pageUrl . '-' . page;
+                                           class php: (currentPage EQ page ? 'active' : NULL)"
                             tal:content="page"></a>
                     </li>
                     <li tal:condition="php: currentPage NE numPages">
-                        <a tal:attributes="href php: SERVER['REQUEST_URI'] . '?p=' . (currentPage + 2)">Next &raquo;</a>
+                        <a tal:attributes="href php: pageUrl . '-' . (currentPage + 1)">Next &raquo;</a>
                     </li>
                 </ul>
  

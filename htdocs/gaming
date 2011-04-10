@@ -17,6 +17,7 @@ define('GAMES_PER_PAGE', 9);
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'gaming.html');
 
+$pageUrl = $_SERVER['PHP_SELF'];
 $selectedCategory = NULL;
 
 if (isset($_GET['category']) && trim((string) $_GET['category']) != '') {
@@ -24,28 +25,16 @@ if (isset($_GET['category']) && trim((string) $_GET['category']) != '') {
                                      trim((string) $_GET['category']));
 }
 
-$currentPage = 0;
-
-list($games, $numGames) = getGames($selectedCategory);
-
-$numPages = ceil($numGames / GAMES_PER_PAGE);
-
-if (isset($_GET['page']) && strlen((string) $_GET['page']) >= 2) {
-    $requestedPage = (int) substr((string) $_GET['page'], 1);
-
-    if ($requestedPage >= 0 && $requestedPage <= $numPages) {
-        $currentPage = $requestedPage;
-    }
+if ($selectedCategory !== NULL) {
+    $pageUrl = trim((string) $_GET['category']) . '-games';
 }
+
+getGames($template, $selectedCategory);
 
 $template->set('selectedCategory', $selectedCategory);
 $template->set('categories', $category);
-$template->set('games', $games);
 $template->set('SERVER', $_SERVER);
-$template->set('numPages', $numPages);
-$template->set('currentPage', $currentPage);
-$template->set('previousPage', ($currentPage != 0 ? ($currentPage - 1) : 0));
-$template->set('nextPage', ($currentPage != $numPages ? ($currentPage + 1) : $numPages));
+$template->set('pageUrl', $pageUrl);
 
 try {
     echo $template->execute();
@@ -72,17 +61,24 @@ function findCategory(array $category, $categoryTitle) {
 }
 
 /**
- * @param int $categoryId
+ * @param htmlTemplate &$template
+ * @param int          $categoryId
  *
  * @return array
  */
-function getGames($categoryId) {
-    $result = array(0 => array(),
-                    1 => 0);
+function getGames(htmlTemplate &$template, $categoryId) {
+    $template->set('games', array());
+    $template->set('numPages', 0);
+    $template->set('currentPage', 1);
 
     try {
         $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
-        list($statement, $numGames) = getSqlStatement($db, $categoryId);
+        $statement = getSqlStatement($template, $db, $categoryId);
+
+        if ($statement === NULL) {
+            return;
+        }
+
         $statement->execute();
         $games = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -90,22 +86,31 @@ function getGames($categoryId) {
                    create_function('&$v',
                                    '$v["description"] = trimText($v["description"], 20);'));
 
-        $result[0] = $games;
-        $result[1] = $numGames;
+        $template->set('games', $games);
     } catch (Exception $e) {
     }
-
-    return $result;
 }
 
 /**
- * @param db  $db
- * @param int $categoryId
+ * @param htmlTemplate &$template
+ * @param db           $db
+ * @param int          $categoryId
  *
  * @return array
  */
-function getSqlStatement(db $db, $categoryId) {
-    $result = array();
+function getSqlStatement(htmlTemplate &$template, db $db, $categoryId) {
+    if ($categoryId !== NULL) {
+        $numGames = getCategoryNumberOfGames($db, $categoryId);
+    } else {
+        $numGames = getTotalNumberOfGames($db);
+    }
+
+    if ($numGames === NULL) {
+        return NULL;
+    }
+
+    $currentPage = paginate($template, $numGames);
+    $offset = ($currentPage > 1 ? ($currentPage - 1) * GAMES_PER_PAGE : 0);
 
     if ($categoryId !== NULL) {
         $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
@@ -113,25 +118,50 @@ function getSqlStatement(db $db, $categoryId) {
                 JOIN     category_game_xref
                 ON       game_id = id
                 WHERE    category_id = :categoryId
-                LIMIT    ' . GAMES_PER_PAGE;
+                ORDER BY played DESC
+                LIMIT    ' . GAMES_PER_PAGE . '
+                OFFSET   ' . $offset;
 
         $statement = $db->prepare($sql);
         $statement->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
+    } else {
+        $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
+                FROM     game
+                ORDER BY played DESC
+                LIMIT    ' . GAMES_PER_PAGE . '
+                OFFSET   ' . $offset;
 
-        $result[0] = $statement;
-        $result[1] = getCategoryNumberOfGames($db, $categoryId);
-
-        return $result;
+        $statement = $db->prepare($sql);
     }
 
-    $sql = 'SELECT title, id, filepath, slug, description, thumbtype
-            FROM   game
-            LIMIT  ' . GAMES_PER_PAGE;
+    return $statement;
+}
 
-    $result[0] = $db->prepare($sql);
-    $result[1] = getTotalNumberOfGames($db);
+/**
+ * @param htmlTemplate &$template
+ * @param int          $numGames
+ *
+ * @return int
+ */
+function paginate(htmlTemplate &$template, $numGames) {
+    $currentPage = 1;
+    $numPages = ceil($numGames / GAMES_PER_PAGE);
 
-    return $result;
+    $template->set('numPages', $numPages);
+
+    if (isset($_GET['page']) && strlen((string) $_GET['page']) >= 2) {
+        $requestedPage = (int) substr((string) $_GET['page'], 1);
+
+        if ($requestedPage >= 0 && $requestedPage <= $numPages) {
+            $currentPage = $requestedPage;
+            $template->set('currentPage', $requestedPage);
+        }
+    }
+
+    $template->set('previousPage', ($currentPage != 1 ? ($currentPage - 1) : 1));
+    $template->set('nextPage', ($currentPage != $numPages ? ($currentPage + 1) : $numPages));
+
+    return $currentPage;
 }
 
 /**
