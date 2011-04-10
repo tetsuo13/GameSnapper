@@ -29,6 +29,7 @@ width           SMALLINT NOT NULL,
 height          SMALLINT NOT NULL,
 thumbtype       VARCHAR(8) NOT NULL,
 vendor_id       INTEGER,
+featured        SMALLINT,
 
 UNIQUE (title),
 UNIQUE (slug),
