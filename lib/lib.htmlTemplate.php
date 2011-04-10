@@ -20,5 +20,6 @@ class htmlTemplate extends PHPTAL {
 
         $this->setPhpCodeDestination(ROOT_DIR . 'templateCache');
         $this->setOutputMode(PHPTAL::HTML5);
+        $this->stripComments(TRUE);
     }
 }
