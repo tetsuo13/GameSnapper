@@ -21,10 +21,10 @@ RewriteRule ^play/(\d+)\-(.*)$ /play?id=$1&title=$2
 
 # URLs to browse games by category will follow pattern "<category.title>-games"
 # with optional page as "-[0-9]" suffix.
-RewriteRule ^(.*)-games(-[0-9])?$ /gaming?category=$1&page=$2
+RewriteRule ^(.*)-games(-[0-9]+)?$ /gaming?category=$1&page=$2
 
 # Browsing all categories.
-RewriteRule ^gaming(-[0-9])$ /gaming?page=$1
+RewriteRule ^gaming(-[0-9]+)$ /gaming?page=$1
 
 # Gzip compression.
 <IfModule mod_deflate.c>
