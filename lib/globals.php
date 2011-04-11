@@ -2,7 +2,7 @@
 /**
  * Constants and other things all scripts need.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-18
  * @author    Andrei Nicholson
  */
@@ -10,7 +10,7 @@
 $serverName = (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : NULL);
 
 define('DEBUG_MODE',
-       ($serverName !== NULL ? (substr($serverName, 3) != 'www') : FALSE));
+       ($serverName !== NULL ? (substr($serverName, 0, 3) != 'www') : FALSE));
 
 if (DEBUG_MODE) {
     error_reporting(E_ALL);
