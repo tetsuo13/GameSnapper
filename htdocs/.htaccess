@@ -35,3 +35,6 @@ RewriteRule ^gaming(-[0-9]+)$ /gaming?page=$1
         SetOutputFilter DEFLATE
     </FilesMatch>
 </IfModule>
+RewriteCond %{HTTP_HOST} ^gamesnapper.com$
+RewriteRule ^(.*)$ "http\:\/\/www\.gamesnapper\.com$1" [R=301,L]
+
