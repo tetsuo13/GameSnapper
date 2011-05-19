@@ -12,7 +12,7 @@
     <tal:block metal:fill-slot="head_css">
         <style>
         #body {
-            height: 1075px;
+            height: 1100px;
         }
         #gcontainer {
             text-align: center;
@@ -55,6 +55,10 @@
         #other p {
             color: #fff;
         }
+        .twitter-share-button {
+            float: left;
+            padding-right: 25px;
+        }
         </style>
     </tal:block>
 
@@ -80,6 +84,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 <h2 tal:content="title" />
 
                 <iframe src="http://www.facebook.com/plugins/like.php?href&amp;layout=button_count&amp;show_faces=false&amp;width=450&amp;action=like&amp;font&amp;colorscheme=dark&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe>
+
+                <a href="http://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
                 <div id="gdet">
                     <b>Added:</b> <span tal:replace="added" /><br />
