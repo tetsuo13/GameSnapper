@@ -99,7 +99,7 @@ function otherGamesInCategory(array $category) {
                 ON       game_id = id
                 WHERE    category_id = :category
                 ORDER BY random()
-                LIMIT    5';
+                LIMIT    10';
 
         $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
         $statement = $db->prepare($sql);
