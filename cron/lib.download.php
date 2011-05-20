@@ -34,7 +34,7 @@ function gameExists($title, PDOStatement $statement) {
 
     // Abort on error.
     if ($row === FALSE || empty($row['game_id'])) {
-        return TRUE;
+        return FALSE;
     }
 
     // Game exists if a game ID was found or if it's banned.
