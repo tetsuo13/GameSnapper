@@ -36,6 +36,13 @@ if (is_array($result) && count($result) == 2) {
     $template->set('otherGames', otherGamesInCategory($category));
     $template->set('pageTitle', $game['title'] . ' - GameSnapper');
 
+    $keywords = array('games', 'online', 'free', $game['title']);
+    foreach ($category as $v) {
+        $keywords[] = $v->title . ' games';
+    }
+    $template->set('keywords', implode(', ', $keywords));
+    unset($keywords, $v);
+
     updatePlayCounter($game['id']);
 }
 
