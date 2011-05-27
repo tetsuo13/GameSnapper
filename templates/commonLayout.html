@@ -156,10 +156,23 @@ ul.front-cat li a.active {
 #footer {
     border-top: 1px solid #394f67;
     clear: both;
-    height: 36px;
+    height: 40px;
     color: #9ec3ea;
     background: url(../img/footer-bg.png) repeat-x;
     padding-top: 8px;
+    text-align: center;
+}
+#footer {
+    line-height: 5px;
+}
+#footer ul li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: inline;
+}
+#footer ul li a {
+    padding: 7px 10px;
 }
 
 #banner {
@@ -271,6 +284,10 @@ h3 {
 
     <div id="footer">
         <div class="std-width">
+            <ul>
+                <li><a href="http://www.ugotgames.com/">UGotGames.com</a></li>
+                <li><a href="http://www.playtomic.com/games">playtomic</a></li>
+            </ul>
             <p>Copyright &copy; <tal:block tal:replace="php: date('Y')" /> GameSnapper</p>
         </div>
     </div>
