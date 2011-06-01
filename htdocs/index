@@ -16,6 +16,22 @@ require_once INCLUDE_DIR . 'inc.category.php';
 $template = new htmlTemplate(TEMPLATE_DIR . 'index.html');
 $template->set('pageTitle', 'GameSnapper');
 
+$keywords = array('free online flash games',
+                  'online flash games',
+                  'online flash game',
+                  'online games',
+                  'free online games',
+                  'flash online games',
+                  'flash games');
+
+foreach ($category as $k => $v) {
+    if (stristr($v['title'], 'game') === FALSE) {
+        $keywords[] = strtolower($v['title']) . ' games';
+    }
+}
+
+$template->set('keywords', implode(', ', $keywords));
+
 try {
     $db = new db(db::DEFAULT_DSN, db::READ_ONLY_ACCESS);
 } catch (Exception $e) {

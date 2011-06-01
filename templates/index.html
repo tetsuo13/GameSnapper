@@ -2,6 +2,9 @@
     tal:define="activeHome string:active">
 
     <tal:block metal:fill-slot="head_javascript">
+        <meta name="description" content="At GameSnapper you can play hundreds of free online games. With action games, sports games, arcade games, board games, puzzle games and many more free games!" />
+        <meta name="keywords" tal:attributes="content keywords" />
+
         <script type="text/javascript">
         $(function() {
             var numFeatured = <tal:block tal:replace="numFeaturedGames" />,
