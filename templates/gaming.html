@@ -1,16 +1,10 @@
 <tal:block metal:use-macro="commonLayout.html/main"
     tal:define="activeGames string:active">
-
-    <tal:block metal:fill-slot="head_javascript">
-        <script type="text/javascript">/*<![CDATA[*/
-        $(function() {
-        });
-        /*]]>*/
-        </script>
-    </tal:block>
-
     <tal:block metal:fill-slot="head_css">
         <style>
+        #body {
+            height: 1100px;
+        }
         h3 {
             padding-top: 1em;
             font-size: 120%;
