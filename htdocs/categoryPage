@@ -34,7 +34,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
             ON       game_id = id
             WHERE    category_id = :categoryId
             ORDER BY played
-            LIMIT    9';
+            LIMIT    12';
 
     $statement = $db->prepare($sql);
     $statement->bindParam(':categoryId', $_GET['id'], PDO::PARAM_INT);

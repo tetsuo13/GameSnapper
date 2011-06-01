@@ -28,7 +28,7 @@ $highest = array();
 $sql = 'SELECT   title, id, filepath, slug, description, thumbtype
         FROM     game
         ORDER BY played DESC
-        LIMIT    3';
+        LIMIT    4';
 
 foreach ($db->query($sql) as $row) {
     $row['description'] = trimText($row['description'], 20);
@@ -55,7 +55,7 @@ $sql = "SELECT   title, id, filepath, slug, description, thumbtype
         ON       game_id = id
         WHERE    category_id = $firstHomepageCategory
         ORDER BY played
-        LIMIT    9";
+        LIMIT    12";
 
 foreach ($db->query($sql) as $row) {
     $row['description'] = trimText($row['description'], 20);
