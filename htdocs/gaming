@@ -16,7 +16,6 @@ require_once INCLUDE_DIR . 'inc.category.php';
 define('GAMES_PER_PAGE', 9);
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'gaming.html');
-$template->set('pageTitle', 'GameSnapper Browse');
 
 $pageUrl = $_SERVER['PHP_SELF'];
 $selectedCategory = NULL;
@@ -31,6 +30,15 @@ if ($selectedCategory !== NULL) {
 }
 
 getGames($template, $selectedCategory);
+
+if ($selectedCategory !== NULL && isset($category[$selectedCategory])) {
+    $pageTitle = $category[$selectedCategory]['title']
+               . ' games at GameSnapper';
+} else {
+    $pageTitle = 'GameSnapper Browser';
+}
+
+$template->set('pageTitle', $pageTitle);
 
 $template->set('selectedCategory', $selectedCategory);
 $template->set('categories', $category);
