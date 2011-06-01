@@ -6,6 +6,22 @@
         <meta name="keywords" tal:attributes="content keywords" />
 
         <script type="text/javascript">/*<![CDATA[*/
+        function fullScreen() {
+            var swf = $("#gcontainer");
+            var oldWidth = swf.css("width"),
+                oldHeight = swf.css("height");
+            swf.css({
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                width: "90%",
+                height: "90%"
+            });
+            $("body").each(function() {
+                $(this).addClass("full-screen");
+            });
+        }
+
         $(function() {
             swfobject.embedSWF("${flash_path}", "gcontainer", "${flash_width}", "${flash_height}", "9");
         });
@@ -16,6 +32,9 @@
         <style>
         #body {
             height: 1300px;
+        }
+        .full-screen {
+            background-color: #fff;
         }
         #gcontainer {
             text-align: center;
@@ -62,6 +81,11 @@
             float: left;
             padding-right: 25px;
         }
+        #controls {
+            text-transform: uppercase;
+            float: right;
+            font-weight: bold;
+        }
         </style>
     </tal:block>
 
@@ -81,10 +105,13 @@ google_ad_height = 90;
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
 
-            <div id="gcontainer">Alternative content</div>
+            <div id="gcontainer">Please wait while game loads...</div>
 
             <div id="ginfo">
-                <h2 tal:content="title" />
+                <div id="gametitle">
+                    <div id="controls"><a href="javascript:fullScreen()">Full screen mode</a></div>
+                    <h2 tal:content="title" />
+                </div>
 
                 <iframe src="http://www.facebook.com/plugins/like.php?href&amp;layout=button_count&amp;show_faces=false&amp;width=450&amp;action=like&amp;font&amp;colorscheme=dark&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe>
 
