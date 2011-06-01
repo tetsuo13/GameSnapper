@@ -13,7 +13,7 @@ require_once LIB_DIR . 'lib.db.php';
 require_once LIB_DIR . 'lib.gameDisplay.php';
 require_once INCLUDE_DIR . 'inc.category.php';
 
-define('GAMES_PER_PAGE', 9);
+define('GAMES_PER_PAGE', 15);
 
 $template = new htmlTemplate(TEMPLATE_DIR . 'gaming.html');
 
