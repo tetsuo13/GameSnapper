@@ -141,6 +141,10 @@ function getGame($filepath, $slug) {
         $statement->execute();
         $game = $statement->fetch(PDO::FETCH_ASSOC);
 
+        if ($game === FALSE) {
+            return NULL;
+        }
+
         $sql = 'SELECT   id, title
                 FROM     category
                 WHERE    id IN (SELECT category_id
@@ -154,6 +158,10 @@ function getGame($filepath, $slug) {
 
         $statement->execute();
         $category = $statement->fetchAll(PDO::FETCH_CLASS);
+
+        if ($category === FALSE) {
+            return NULL;
+        }
 
         return array($game, $category);
     } catch (Exception $e) {

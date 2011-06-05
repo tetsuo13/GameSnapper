@@ -2,10 +2,10 @@
     tal:define="activeGames string:active">
 
     <tal:block metal:fill-slot="head_javascript">
-        <meta name="description" tal:attributes="content description" />
-        <meta name="keywords" tal:attributes="content keywords" />
+        <meta tal:condition="result" name="description" tal:attributes="content description" />
+        <meta tal:condition="result" name="keywords" tal:attributes="content keywords" />
 
-        <script type="text/javascript">/*<![CDATA[*/
+        <script tal:condition="result" type="text/javascript">/*<![CDATA[*/
         $(function() {
             swfobject.embedSWF("${flash_path}", "gcontainer", "${flash_width}", "${flash_height}", "9");
         });
