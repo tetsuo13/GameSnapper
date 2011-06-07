@@ -3,7 +3,7 @@
 /**
  * Creates the sitemap.xml file in htdocs.
  *
- * @copyright 2010 GameSnapper
+ * @copyright 2010-2011 GameSnapper
  * @since     2010-11-28
  * @author    Andrei Nicholson
  */
@@ -37,7 +37,7 @@ $sql = 'SELECT   id, filepath, slug, added
 foreach ($db->query($sql) as $row) {
     fwrite($xmlFile, '<url>');
     fwrite($xmlFile,
-           '<loc>' . HOST_URL . '/play/' . $row['id'] . '-' . $row['slug'] . '</loc>');
+           '<loc>' . HOST_URL . '/play/' . $row['filepath'] . '-' . $row['slug'] . '</loc>');
     fwrite($xmlFile,
            '<lastmod>' . date('c', strtotime($row['added'])) . '</lastmod>');
     fwrite($xmlFile, '<changefreq>monthly</changefreq>');
