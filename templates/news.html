@@ -1,0 +1,88 @@
+<tal:block metal:use-macro="commonLayout.html/main"
+    tal:define="activeNews string:active">
+
+    <tal:block metal:fill-slot="head_css">
+        <style>
+        #body {
+            height: 1600px;
+        }
+        body {
+            color: #fff;
+        }
+        h2 {
+            padding-top: 0;
+            padding-bottom: 2em;
+        }
+        #f {
+            padding-top: 2em;
+        }
+        hr {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            width: 95%;
+            background-color: #1E2F39;
+            border: 0;
+            height: 5px;
+        }
+        #cat {
+            width: 130px;
+            float: left;
+            text-align: right;
+        }
+        #cat .date {
+            color: #ffda66;
+        }
+        #cat h3 {
+            padding-top: 5px;
+        }
+        #browse {
+            margin-left: 155px;
+            width: 560px;
+            padding: 8px 15px 8px 15px;
+            background-color: #1D2D36;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+        #intro h2 {
+            float: left;
+            padding-left: 20px;
+        }
+        #ad {
+            text-align: right;
+            padding-right: 25px;
+        }
+        </style>
+    </tal:block>
+
+    <tal:block metal:fill-slot="body">
+        <div id="f">
+            <div id="intro">
+                <h2>GameSnapper News</h2>
+                <div id="ad">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-5093190295525971";
+/* GameSnapper News */
+google_ad_slot = "3608636798";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+                </div>
+            </div>
+            <hr style="clear: both" />
+
+            <span tal:repeat="article articles">
+                <div id="cat">
+                    <span class="date" tal:content="article/posted" /><br />
+                    <h3 tal:content="article/title" />
+                </div>
+                <div id="browse" tal:content="structure article/post"></div>
+                <hr />
+            </span>
+        </div>
+    </tal:block>
+</tal:block>

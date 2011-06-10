@@ -1,0 +1,77 @@
+<?php
+/**
+ * News page.
+ *
+ * @copyright 2011 GameSnapper
+ * @since     2011-06-06
+ * @author    Andrei Nicholson
+ */
+
+require_once '../lib/globals.php';
+require_once LIB_DIR . 'lib.htmlTemplate.php';
+
+$news = new newsPage;
+$template = $news->getTemplate();
+
+try {
+    echo $template->execute();
+} catch (Exception $e) {
+    echo '<pre>', $e->getMessage(), '</pre>';
+}
+
+/**
+ * @since 2011-06-07
+ */
+class newsPage {
+    const ARTICLE_CACHE = 'news_cache/';
+
+    private $template = NULL;
+    private $articles = array();
+
+    /**
+     */
+    public function __construct() {
+        $this->template = new htmlTemplate(TEMPLATE_DIR . 'news.html');
+        $this->template->set('pageTitle', 'GameSnapper News');
+        $this->aggregateArticles();
+    }
+
+    /**
+     */
+    private function aggregateArticles() {
+        $files = glob(self::ARTICLE_CACHE . '*.php');
+
+        if ($files === FALSE) {
+            return;
+        }
+
+        foreach ($files as $file) {
+            $this->parseArticle($file);
+        }
+    }
+
+    /**
+     * @param string $path
+     */
+    private function parseArticle($path) {
+        include $path;
+
+        if (!isset($title, $posted, $post)) {
+            return;
+        }
+
+        $this->articles[] = array('title'  => $title,
+                                  'posted' => date('M j, Y', $posted),
+                                  'post'   => $post);
+    }
+
+    /**
+     * @return htmlTemplate
+     */
+    public function getTemplate() {
+        $this->template->set('articles', $this->articles);
+        return $this->template;
+    }
+}
+
+/** vim: set filetype=php: */
