@@ -10,6 +10,7 @@
 
 require_once '../lib/globals.php';
 require_once LIB_DIR . 'lib.db.php';
+require_once LIB_DIR . 'lib.gameDisplay.php';
 
 define('SITEMAP_FILENAME', ROOT_DIR . 'htdocs/sitemap.xml');
 
@@ -28,20 +29,46 @@ try {
 }
 
 fwrite($xmlFile, '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL);
-fwrite($xmlFile, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL);
+fwrite($xmlFile,
+       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL);
+
+fwrite($xmlFile, addUrl(HOST_URL, 'weekly'));
 
 $sql = 'SELECT   id, filepath, slug, added
         FROM     game
         ORDER BY added DESC';
 
 foreach ($db->query($sql) as $row) {
-    fwrite($xmlFile, '<url>');
-    fwrite($xmlFile,
-           '<loc>' . HOST_URL . '/play/' . $row['filepath'] . '-' . $row['slug'] . '</loc>');
-    fwrite($xmlFile,
-           '<lastmod>' . date('c', strtotime($row['added'])) . '</lastmod>');
-    fwrite($xmlFile, '<changefreq>monthly</changefreq>');
-    fwrite($xmlFile, '</url>');
+    $location = HOST_URL . '/play/' . $row['filepath'] . '-' . $row['slug'];
+    $lastModified = date('c', strtotime($row['added']));
+    fwrite($xmlFile, addUrl($location, 'monthly', $lastModified, 0.8));
+}
+
+fwrite($xmlFile, addUrl(HOST_URL . '/gaming', 'weekly'));
+
+$sql = 'SELECT id, title, homepage
+        FROM   category';
+
+foreach ($db->query($sql) as $row) {
+    fwrite($xmlFile, addUrl(categoryLink($row['title']), 'weekly'));
 }
 
 fwrite($xmlFile, '</urlset>');
+
+/**
+ * @param string $location
+ * @param string $changeFrequency
+ * @param string $lastModified
+ * @param float  $priority
+ *
+ * @return string
+ */
+function addUrl($location, $changeFrequency, $lastModified = NULL,
+                $priority = NULL) {
+    return '<url>' .
+           "<loc>$location</loc>" .
+           ($lastModified !== NULL ? "<lastmod>$lastModified</lastmod>" : '') .
+           "<changefreq>$changeFrequency</changefreq>" .
+           ($priority !== NULL ? "<priority>$priority</priority>" : '') .
+           '</url>';
+}
