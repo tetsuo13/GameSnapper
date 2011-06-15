@@ -1,4 +1,5 @@
 error_log
+htdocs/css/gs.css
 htdocs/js/gs.js
 includes/
 sitemap.xml
