@@ -129,7 +129,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  
                 <div class="game" tal:repeat="item games">
                     <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
-                            tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>
+                            tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title; title item/title" /></a>
                     </div>
                     <div class="game-info">
                         <h3><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}" tal:content="item/title"></a></h3>

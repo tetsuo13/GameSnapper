@@ -132,7 +132,8 @@
                             <div tal:attributes="class className">
                                 <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${game/filepath}-${game/slug}"><img
                                     tal:attributes="src string:${HOST_URL}/img/games/${game/filepath}/${game/slug}.${game/thumbtype};
-                                                    alt game/title" /></a>
+                                                    alt game/title;
+                                                    title game/title" /></a>
                                 </div>
                                 <div class="gi">
                                     <h2><a tal:attributes="href string:${HOST_URL}/play/${game/filepath}-${game/slug}" tal:content="game/title"></a></h2>
@@ -161,7 +162,7 @@
             <div id="main">
                 <div class="game" tal:repeat="item game">
                     <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
-                            tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>
+                            tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title; title item/title" /></a>
                     </div>
                     <div class="game-info">
                         <h3><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}" tal:content="item/title"></a></h3>
@@ -187,7 +188,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                     <h1 class="section">Highest Rated</h1>
                     <div class="game" tal:repeat="item highest">
                         <div class="thumb"><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}"><img
-                                tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title" /></a>
+                                tal:attributes="src string:${HOST_URL}/img/games/${item/filepath}/${item/slug}.${item/thumbtype}; alt item/title; title item/title" /></a>
                         </div>
                         <div class="game-info">
                             <h3><a tal:attributes="href string:${HOST_URL}/play/${item/filepath}-${item/slug}" tal:content="item/title"></a></h3>
