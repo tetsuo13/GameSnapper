@@ -10,9 +10,10 @@ compile more than one file (wildcard support). Use that when available.
 import httplib
 import os
 import urllib
+import string
 import sys
 
-BASE_DIR = os.sep + os.path.join("home1", "neoanime", "gamesnapper") + os.sep
+BASE_DIR = os.sep.join(os.getcwd().split(os.sep)[:-1]) + os.sep
 JS_DIR = BASE_DIR + os.path.join("htdocs", "js") + os.sep
 TARGET_JS_FILE = JS_DIR + "gs.js"
 ALREADY_COMPILED_FILES = ["jquery.js", "swfobject.js"]
