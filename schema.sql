@@ -19,7 +19,7 @@ CREATE TABLE game (
 id              SERIAL PRIMARY KEY,
 title           VARCHAR(128) NOT NULL,
 played          INTEGER NOT NULL DEFAULT 0,
-description     VARCHAR(1024) NOT NULL,
+description     VARCHAR(4096) NOT NULL,
 instructions    VARCHAR(1024),
 added           TIMESTAMP NOT NULL DEFAULT NOW(),
 filepath        VARCHAR(16) NOT NULL,
