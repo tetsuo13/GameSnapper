@@ -15,16 +15,12 @@
         function fullScreen() {
             var maskWidth = $(document).width(),
                 maskHeight = $(document).height(),
-                windowWidth = $(window).width(),
-                windowHeight = $(window).height(),
                 mask = $("div#mask"),
                 mode = $("a.normalmode"),
-                game = $("div#gcontainer"),
                 toggle = [mask, mode],
                 swf = $("div#swfcontainer");
 
             if (!fullMode) {
-                // Subtract one to prevent scrollbars from appearing.
                 mask.css({
                     width: maskWidth - 1 + "px",
                     height: maskHeight - 1 + "px"
@@ -33,9 +29,9 @@
                 swf.css({
                     position: "fixed",
                     top: "10px",
-                    left: "5%",
-                    width: "90%",
-                    height: "90%"
+                    left: "0px",
+                    width: "100%",
+                    height: "95%"
                 });
             } else {
                 swf.css({
@@ -52,22 +48,6 @@
             });
 
             fullMode = !fullMode;
-
-return;
-
-            var swf = $("#gcontainer");
-            var oldWidth = swf.css("width"),
-                oldHeight = swf.css("height");
-            swf.css({
-                position: "absolute",
-                top: "0px",
-                left: "0px",
-                width: "90%",
-                height: "90%"
-            });
-            $("body").each(function() {
-                $(this).addClass("full-screen");
-            });
         }
 
         $(function() {
@@ -79,50 +59,35 @@ return;
 
     <tal:block metal:fill-slot="head_css">
         <style>
-.normalmode {
-    position: fixed;
-    top: 5px;
-    right: 50px;
-    z-index: 9001;
-    display: none;
-    text-transform: uppercase;
-}
-#boxes {
-    top: 0px;
-    left: 0px;
-    position: absolute;
-    z-index: 9000;
-}
-#mask {
-    background-color:#000;
-    display:none;
-    position:absolute;
-    width:100%;
-    height:100%;
-    filter:alpha(opacity=90);
-    opacity:0.9;
-    -moz-opacity:0.9;
-    z-index:100;
-
-    text-align:center;
-    vertical-align:middle;
-}
-/*   
-#boxes .window {
-  position:absolute;
-  display:none;
-  z-index:9999;
-  padding:20px;
-}
- */
-#boxes #dialog {
-}
-
+        .normalmode {
+            position: fixed;
+            top: 5px;
+            right: 50px;
+            z-index: 9001;
+            display: none;
+            text-transform: uppercase;
+        }
+        #boxes {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            z-index: 9000;
+        }
+        #mask {
+            background-color: #000;
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: alpha(opacity=90);
+            opacity: 0.9;
+            -moz-opacity: 0.9;
+            z-index: 100;
+            text-align: center;
+            vertical-align: middle;
+        }
         #body {
             height: 1300px;
-        }
-        .full-screen {
-            background-color: #fff;
         }
         #swfcontainer {
             text-align: center;
@@ -196,13 +161,11 @@ google_ad_width = 728;
 google_ad_height = 90;
 /*]]>*/
 </script>
-<!--
 <script type="text/javascript"
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
--->
 
-            <div id="swfcontainer" style="width: ${flash_width}px; height: ${flash_height}px; margin: 0px auto;">
+            <div id="swfcontainer" style="width: ${flash_width}px; height: ${flash_height}px; margin: 0px auto; margin-left: 0px;">
                 <div id="gcontainer">Please wait while <span tal:replace="title" /> loads...</div>
             </div>
 
@@ -260,7 +223,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
             var params = {
                 bgcolor: "#000000"
             };
-            //swfobject.embedSWF("${flash_path}", "gcontainer", "${flash_width}", "${flash_height}", "9");
             swfobject.embedSWF("${flash_path}", "gcontainer", "100%", "100%",
                                "9", "expressInstall.swf", {}, params);
             </script>
