@@ -23,9 +23,12 @@ try {
  * @since 2011-06-07
  */
 class newsPage {
+    /** Relative path to directory of PHP news articles. */
     const ARTICLE_CACHE = 'news_cache/';
 
+    /** {@link htmlTemplate} object. */
     private $template = NULL;
+
     private $articles = array();
 
     /**
@@ -48,6 +51,20 @@ class newsPage {
         foreach ($files as $file) {
             $this->parseArticle($file);
         }
+
+        usort($this->articles, array($this, 'sortArticles'));
+    }
+
+    /**
+     * Sort articles in reverse chronological order (newest first).
+     *
+     * @param array $a
+     * @param array $b
+     *
+     * @return boolean
+     */
+    private function sortArticles(array $a, array $b) {
+        return ($a['timestamp'] < $b['timestamp']);
     }
 
     /**
@@ -60,9 +77,10 @@ class newsPage {
             return;
         }
 
-        $this->articles[] = array('title'  => $title,
-                                  'posted' => date('M j, Y', $posted),
-                                  'post'   => $post);
+        $this->articles[] = array('title'     => $title,
+                                  'posted'    => date('M j, Y', $posted),
+                                  'post'      => $post,
+                                  'timestamp' => $posted);
     }
 
     /**
