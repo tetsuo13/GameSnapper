@@ -6,18 +6,90 @@
         <meta tal:condition="result" name="keywords" tal:attributes="content keywords" />
 
         <script tal:condition="result" type="text/javascript">/*<![CDATA[*/
+        var fullMode = false;
+            swfCss = {
+                width: ${flash_width},
+                height: ${flash_height}
+            };
+
+        function fullScreen() {
+            var maskWidth = $(document).width(),
+                maskHeight = $(document).height(),
+                mask = $("div#mask"),
+                mode = $("a.normalmode"),
+                toggle = [mask, mode],
+                swf = $("div#swfcontainer");
+
+            if (!fullMode) {
+                mask.css({
+                    width: maskWidth - 1 + "px",
+                    height: maskHeight - 1 + "px"
+                });
+
+                swf.css({
+                    position: "fixed",
+                    top: "10px",
+                    left: "0px",
+                    width: "100%",
+                    height: "95%"
+                });
+            } else {
+                swf.css({
+                    position: "static",
+                    top: "",
+                    left: "",
+                    width: "${flash_width}px",
+                    height: "${flash_height}px"
+                });
+            }
+
+            $.each(toggle, function(i, v) {
+                v.toggle();
+            });
+
+            fullMode = !fullMode;
+        }
+
         $(function() {
-            swfobject.embedSWF("${flash_path}", "gcontainer", "${flash_width}", "${flash_height}", "9");
+            // Move container to first child of BODY.
+            $("body").prepend($("div#boxes"));
         });
         /*]]>*/</script>
     </tal:block>
 
     <tal:block metal:fill-slot="head_css">
         <style>
+        .normalmode {
+            position: fixed;
+            top: 5px;
+            right: 50px;
+            z-index: 9001;
+            display: none;
+            text-transform: uppercase;
+        }
+        #boxes {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            z-index: 9000;
+        }
+        #mask {
+            background-color: #000;
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: alpha(opacity=90);
+            opacity: 0.9;
+            -moz-opacity: 0.9;
+            z-index: 100;
+            text-align: center;
+            vertical-align: middle;
+        }
         #body {
             height: 1300px;
         }
-        #gcontainer {
+        #swfcontainer {
             text-align: center;
             display: block;
             margin: 0 auto;
@@ -62,11 +134,23 @@
             float: left;
             padding-right: 25px;
         }
+        #controls {
+            text-transform: uppercase;
+            float: right;
+            font-weight: bold;
+        }
         </style>
     </tal:block>
 
     <tal:block metal:fill-slot="body">
         <p tal:condition="not: result">Sorry, something went wrong.</p>
+
+        <div id="boxes">
+            <div id="dialog" class="window">
+                <a href="javascript:fullScreen()" class="normalmode">Go back to normal mode</a>
+            </div>
+            <div id="mask"></div>
+        </div>
 
         <tal:block tal:condition="result">
 <script type="text/javascript">/*<![CDATA[*/
@@ -81,10 +165,15 @@ google_ad_height = 90;
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
 
-            <div id="gcontainer">Alternative content</div>
+            <div id="swfcontainer" style="width: ${flash_width}px; height: ${flash_height}px; margin: 0px auto;">
+                <div id="gcontainer">Please wait while <span tal:replace="title" /> loads...</div>
+            </div>
 
             <div id="ginfo">
-                <h2 tal:content="title" />
+                <div id="gametitle">
+                    <div id="controls"><a href="javascript:fullScreen()">Full screen mode</a></div>
+                    <h2 tal:content="title" />
+                </div>
 
                 <iframe src="http://www.facebook.com/plugins/like.php?href&amp;layout=button_count&amp;show_faces=false&amp;width=450&amp;action=like&amp;font&amp;colorscheme=dark&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe>
 
@@ -130,6 +219,18 @@ document.write('<g:plusone size="small" count="false"></g:plusone>');
             </div>
 
             <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+            <!--
+                Load the Flash object nearly at the end of the BODY tag. Using
+                jQuery's "$(document).ready()" potentially means Flash won't
+                load until Twitter, Facebook and Google are all finished.
+            -->
+            <script type="text/javascript">
+            var params = {
+                bgcolor: "#000000"
+            };
+            swfobject.embedSWF("${flash_path}", "gcontainer", "100%", "100%",
+                               "9", "expressInstall.swf", {}, params);
+            </script>
         </tal:block>
     </tal:block>
 </tal:block>
