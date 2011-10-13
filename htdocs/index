@@ -16,11 +16,20 @@ require_once INCLUDE_DIR . 'inc.category.php';
 $template = new htmlTemplate(TEMPLATE_DIR . 'index.html');
 $template->set('pageTitle', 'GameSnapper');
 
-$keywords = array('free online flash games',
-                  'online flash games',
-                  'online flash game',
-                  'online games',
+$keywords = array('gamesnapper',
+                  'games',
+                  'played',
+                  'flash',
+                  'free',
+                  'freegames',
                   'free online games',
+                  'free online flash games',
+                  'online',
+                  'online flash game',
+                  'online flash games',
+                  'online free games',
+                  'online games',
+                  'on line games',
                   'flash online games',
                   'flash games');
 
