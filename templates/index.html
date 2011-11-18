@@ -5,6 +5,12 @@
         <meta name="description" content="At GameSnapper you can play hundreds of free online games. With action games, sports games, arcade games, board games, puzzle games and many more free games!" />
         <meta name="keywords" tal:attributes="content keywords" />
 
+        <meta property="og:title" content="GameSnapper" />
+        <meta property="og:type" content="game" />
+        <meta property="og:url" tal:attributes="content HOST_URL" />
+        <meta property="og:site_name" content="GameSnapper" />
+        <meta property="og:locale" content="en_US" />
+
         <script type="text/javascript">
         $(function() {
             var numFeatured = <tal:block tal:replace="numFeaturedGames" />,

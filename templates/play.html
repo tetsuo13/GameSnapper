@@ -5,6 +5,14 @@
         <meta tal:condition="result" name="description" tal:attributes="content description" />
         <meta tal:condition="result" name="keywords" tal:attributes="content keywords" />
 
+        <meta property="og:title" tal:attributes="content title" />
+        <meta property="og:type" content="game" />
+        <meta property="og:url" tal:attributes="content string:${HOST_URL}/play/${filepath}-${slug}" />
+        <meta property="og:image" tal:attributes="content string:${HOST_URL}/img/games/${filepath}/${slug}.${thumbtype}" />
+        <meta property="og:site_name" content="GameSnapper" />
+        <meta property="og:description" tal:attributes="content description" />
+        <meta property="og:locale" content="en_US" />
+
         <script tal:condition="result" type="text/javascript">/*<![CDATA[*/
         var fullMode = false;
             swfCss = {

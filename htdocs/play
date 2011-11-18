@@ -27,6 +27,9 @@ if (is_array($result) && count($result) == 2) {
     list($width, $height) = scaleFlash(745, $game['width'], $game['height']);
     $template->set('flash_width', $width);
     $template->set('flash_height', $height);
+    $template->set('filepath', $game['filepath']);
+    $template->set('slug', $game['slug']);
+    $template->set('thumbtype', $game['thumbtype']);
     $template->set('title', $game['title']);
     $template->set('description', $game['description']);
     $template->set('instructions', $game['instructions']);
