@@ -216,3 +216,11 @@ h3 {
 .game .game-info p {
     padding-top: 10px;
 }
+
+#footdesc {
+    display: block;
+    float: left;
+    margin-right: 35px;
+    line-height: 1.5;
+    padding-top: 15px;
+}
