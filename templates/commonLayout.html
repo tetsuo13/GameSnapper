@@ -20,6 +20,12 @@
     <tal:block tal:replace='structure string:<!--[if lt IE 7]><script type="text/javascript" src="http://shapeshed.github.com/ie6-notice/ie6notice-1.0.0.min.js"></script><![endif]-->' />
     <title tal:content="pageTitle"></title>
     <link rel="stylesheet" type="text/css" tal:attributes="href string:${HOST_URL}/css/gs.css" />
+    <meta property="og:title" content="GameSnapper" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://www.gamesnapper.com" />
+    <meta property="og:image" content="" />
+    <meta property="og:site_name" content="GameSnapper" />
+    <meta property="fb:admins" content="100001888147886" />
     <script tal:attributes="src string:${HOST_URL}/js/gs.js"></script>
 
     <tal:block metal:define-slot="head_javascript" />
