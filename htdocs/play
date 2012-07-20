@@ -2,7 +2,7 @@
 /**
  * Game play page.
  *
- * @copyright 2010-2011 GameSnapper
+ * @copyright 2010-2012 GameSnapper
  * @since     2010-11-28
  * @author    Andrei Nicholson
  */
@@ -80,14 +80,17 @@ function scaleFlash($maxWidth, $width, $height) {
  * @param int $gameId
  */
 function updatePlayCounter($gameId) {
+    $updateBy = rand(1, 5);
+
     try {
         $sql = 'UPDATE game
-                SET    played = played + 1
+                SET    played = played + :updateBy
                 WHERE  id = :game_id';
 
         $db = new db(db::DEFAULT_DSN, db::WRITE_ACCESS);
         $statement = $db->prepare($sql);
 
+        $statement->bindParam(':updateBy', $updateBy, PDO::PARAM_INT);
         $statement->bindParam(':game_id', $gameId, PDO::PARAM_INT);
 
         $statement->execute();
