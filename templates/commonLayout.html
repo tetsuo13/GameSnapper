@@ -1,14 +1,17 @@
 <tal:block metal:define-macro="analytics">
-    <script type="text/javascript">
-    var pkBaseURL = (("https:" == document.location.protocol) ? "https://analytics.gamesnapper.com/" : "http://analytics.gamesnapper.com/");
-    document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-    </script><script type="text/javascript">
-    try {
-    var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 8);
-    piwikTracker.trackPageView();
-    piwikTracker.enableLinkTracking();
-    } catch( err ) {}
-    </script><noscript><p><img src="http://analytics.gamesnapper.com/piwik.php?idsite=8" style="border:0" alt="" /></p></noscript>
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["trackPageView"]);
+  _paq.push(["enableLinkTracking"]);
+
+  (function() {
+    var u="http://analytics.gamesnapper.com/";
+    _paq.push(["setTrackerUrl", u+"piwik.php"]);
+    _paq.push(["setSiteId", "8"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+    g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+  })();
+</script>
 </tal:block>
 
 <tal:block metal:define-macro="main">
